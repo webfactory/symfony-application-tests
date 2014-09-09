@@ -1,0 +1,19 @@
+{
+    "name": "webfactory/symfony-application-tests",
+    "description": "Contains several generic test scenarios that can be applied to Symfony 2 applications.",
+    "keywords": ["Symfony", "tests", "testing", "functional tests", "integration tests"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "webfactory GmbH",
+            "email": "info@webfactory.de",
+            "homepage": "http://www.webfactory.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.10,<6",
+        "symfony/framework-bundle": "~2.3",
+        "phpunit/phpunit": "~3.7"
+    }
+}
