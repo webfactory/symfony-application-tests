@@ -18,5 +18,11 @@
         "twig/twig": "~1.14",
         "jms/security-extra-bundle": "~1.5",
         "phpunit/phpunit": "~3.7"
+    },
+
+    "autoload-dev": {
+        "psr-0": {
+            "Webfactory\\Tests": "src/"
+        }
     }
 }

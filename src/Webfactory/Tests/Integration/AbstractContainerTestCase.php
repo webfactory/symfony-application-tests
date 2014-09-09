@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration;
+namespace Webfactory\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
