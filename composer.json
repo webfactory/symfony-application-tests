@@ -15,8 +15,10 @@
         "php": ">=5.3.10,<6",
         "symfony/framework-bundle": "~2.3",
         "symfony/form": "~2.3",
+        "symfony/validator": "~2.3",
         "twig/twig": "~1.14",
         "jms/security-extra-bundle": "~1.5",
+        "doctrine/common": "~2.4",
         "phpunit/phpunit": "~3.7"
     },
 
