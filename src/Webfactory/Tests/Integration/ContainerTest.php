@@ -40,6 +40,9 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function testFormTypeAliasAndNameAreEqual($id, $type, array $tagDefinition)
     {
+        if ($id === null && $type === null) {
+            $this->markTestSkipped('No form types available, nothing to test.');
+        }
         $message = 'An alias must be defined for form type "%s".';
         $message = sprintf($message, $id);
         $this->assertArrayHasKey('alias', $tagDefinition, $message);
@@ -189,7 +192,13 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function getFormTypes()
     {
-        return $this->getTaggedServices('form.type', array('Symfony'));
+        $types = $this->getTaggedServices('form.type', array('Symfony'));
+        if (count($types) === 0) {
+            return array(
+                array(null, null, array())
+            );
+        }
+        return $types;
     }
 
     /**
