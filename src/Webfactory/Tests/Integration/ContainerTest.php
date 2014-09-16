@@ -102,15 +102,20 @@ class ContainerTest extends AbstractContainerTestCase
     }
 
     /**
-     * Checks if all "@Secure" annotations in the controllers reference
+     * Checks if all "@Secure" annotations in the services reference
      * existing roles.
      *
      * @param \ReflectionMethod $method $method
      * @param Secure $annotation
      * @dataProvider secureAnnotationProvider
      */
-    public function testSecureAnnotationsReferenceExistingRoles(\ReflectionMethod $method, Secure $annotation)
-    {
+    public function testSecureAnnotationsReferenceExistingRoles(
+        \ReflectionMethod $method = null,
+        Secure $annotation = null
+    ) {
+        if ($method === null && $annotation === null) {
+            $this->markTestSkipped('No @Secure annotations found, nothing to test.');
+        }
         foreach ($annotation->roles as $role) {
             /* @var $role string */
             $existingRoles = $this->getExistingRoles();
@@ -128,7 +133,7 @@ class ContainerTest extends AbstractContainerTestCase
     }
 
     /**
-     * Provides a set of controller methods and the Secure annotation that is assigned.
+     * Provides a set of service methods and the Secure annotations that are assigned.
      *
      * @return array(array(\ReflectionMethod|\JMS\SecurityExtraBundle\Annotation\Secure))
      */
@@ -151,6 +156,10 @@ class ContainerTest extends AbstractContainerTestCase
                 }
                 $records[] = array($method, $annotation);
             }
+        }
+        if (count($records) === 0) {
+            // Return a dummy entry, which indicates that the test can be skipped.
+            return array(array());
         }
         return $records;
     }
