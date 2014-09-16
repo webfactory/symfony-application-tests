@@ -4,12 +4,12 @@
          bootstrap="vendor/autoload.php">
 
     <php>
-        <server name="KERNEL_DIR" value="tests/_files" />
+        <server name="KERNEL_DIR" value="tests/_files/test-application" />
     </php>
 
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>src/Tests/</directory>
+            <directory>src/Webfactory/Tests/</directory>
         </testsuite>
     </testsuites>
 
