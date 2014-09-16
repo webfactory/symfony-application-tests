@@ -33,15 +33,15 @@ class ContainerTest extends AbstractContainerTestCase
      *
      * Form types cannot be used if this is not the case.
      *
-     * @param string $id The ID of the type service.
+     * @param string|null $id The ID of the type service.
      * @param \Symfony\Component\Form\FormTypeInterface|mixed $type The type service from the container.
      * @param array(string=>string) $tagDefinition The tag definition that is assigned to the type.
      * @dataProvider getFormTypes
      */
-    public function testFormTypeAliasAndNameAreEqual($id, $type, array $tagDefinition)
+    public function testFormTypeAliasAndNameAreEqual($id = null, $type = null, array $tagDefinition = array())
     {
         if ($id === null && $type === null) {
-            $this->markTestSkipped('No form types available, nothing to test.');
+            $this->markTestSkipped('No form types registered, nothing to test.');
         }
         $message = 'An alias must be defined for form type "%s".';
         $message = sprintf($message, $id);
@@ -67,10 +67,13 @@ class ContainerTest extends AbstractContainerTestCase
      * @param array(string=>string) $tagDefinition
      * @dataProvider getValidators
      */
-    public function testRegisteredValidatorsImplementCorrectInterface($id, $validator, array $tagDefinition)
-    {
+    public function testRegisteredValidatorsImplementCorrectInterface(
+        $id = null,
+        $validator = null,
+        array $tagDefinition = array()
+    ) {
         if ($id === null && $validator === null) {
-            $this->markTestSkipped('No validators available, nothing to test.');
+            $this->markTestSkipped('No validators registered, nothing to test.');
         }
         $message = 'Service "%s" is tagged as validator, but it does not implement the required interface.';
         $message = sprintf($message, $id);
@@ -88,8 +91,11 @@ class ContainerTest extends AbstractContainerTestCase
      * @param \Twig_ExtensionInterface|mixed $extension
      * @dataProvider getTwigExtensions
      */
-    public function testRegisteredTwigExtensionsImplementCorrectInterface($id, $extension)
+    public function testRegisteredTwigExtensionsImplementCorrectInterface($id = null, $extension = null)
     {
+        if ($id === null && $extension === null) {
+            $this->markTestSkipped('No twig extensions registered, nothing to test.');
+        }
         $message = 'Service "%s" is tagged as Twig extension, but it does not implement the required interface.';
         $message = sprintf($message, $id);
         $this->assertInstanceOf('\Twig_ExtensionInterface', $extension, $message);
@@ -185,13 +191,7 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function getValidators()
     {
-        $validators = $this->getTaggedServices('validator.constraint_validator', array('Symfony'));
-        if (count($validators) === 0) {
-            return array(
-                array(null, null, array())
-            );
-        }
-        return $validators;
+        return $this->getTaggedServices('validator.constraint_validator', array('Symfony'));
     }
 
     /**
@@ -201,13 +201,7 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function getFormTypes()
     {
-        $types = $this->getTaggedServices('form.type', array('Symfony'));
-        if (count($types) === 0) {
-            return array(
-                array(null, null, array())
-            );
-        }
-        return $types;
+        return $this->getTaggedServices('form.type', array('Symfony'));
     }
 
     /**
@@ -219,12 +213,16 @@ class ContainerTest extends AbstractContainerTestCase
      *
      * @param string $tag
      * @param array(string) $namespacesToSkip A list of namespace prefixes that will be skipped.
+     * @param mixed $defaultEntry Entry that is returned if no services match.
      * @return array(array(object|null|string|array(string=>string)))
      */
-    protected function getTaggedServices($tag, array $namespacesToSkip = array())
+    protected function getTaggedServices($tag, array $namespacesToSkip = array(), $defaultEntry = array())
     {
-        $container              = $this->getContainerBuilder();
-        $tagsById               = $container->findTaggedServiceIds($tag);
+        $container = $this->getContainerBuilder();
+        $tagsById  = $container->findTaggedServiceIds($tag);
+        if (count($tagsById) === 0) {
+            return array($defaultEntry);
+        }
         $servicesAndDefinitions = array();
         foreach ($tagsById as $id => $tagDefinitions) {
             /* @var $id string */
