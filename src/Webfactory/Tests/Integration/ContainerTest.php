@@ -69,6 +69,9 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function testRegisteredValidatorsImplementCorrectInterface($id, $validator, array $tagDefinition)
     {
+        if ($id === null && $validator === null) {
+            $this->markTestSkipped('No validators available, nothing to test.');
+        }
         $message = 'Service "%s" is tagged as validator, but it does not implement the required interface.';
         $message = sprintf($message, $id);
         $this->assertInstanceOf('\Symfony\Component\Validator\ConstraintValidatorInterface', $validator, $message);
@@ -182,7 +185,13 @@ class ContainerTest extends AbstractContainerTestCase
      */
     public function getValidators()
     {
-        return $this->getTaggedServices('validator.constraint_validator', array('Symfony'));
+        $validators = $this->getTaggedServices('validator.constraint_validator', array('Symfony'));
+        if (count($validators) === 0) {
+            return array(
+                array(null, null, array())
+            );
+        }
+        return $validators;
     }
 
     /**
