@@ -22,6 +22,10 @@
         "phpunit/phpunit": "~3.7"
     },
 
+    "require-dev": {
+        "symfony/browser-kit": "~2.2"
+    },
+
     "autoload-dev": {
         "psr-0": {
             "Webfactory\\Tests": "src/"
