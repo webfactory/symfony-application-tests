@@ -1,0 +1,9 @@
+non_service:
+    path: /non-service
+    defaults:
+        _controller: WebfactoryTestBundle:NonService:test
+
+secure_test:
+    pattern: /secure-test
+    defaults:
+        _controller: webfactory_test.controller.secure_test:securityAction

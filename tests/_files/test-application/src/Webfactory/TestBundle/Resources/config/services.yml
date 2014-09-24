@@ -1,0 +1,8 @@
+services:
+    webfactory_test.twig.extension:
+        class: Webfactory\TestBundle\Twig\Extension\TestExtension
+        tags:
+            - { name: twig.extension }
+
+    webfactory_test.controller.secure_test:
+        class: Webfactory\TestBundle\controller\SecureTestController

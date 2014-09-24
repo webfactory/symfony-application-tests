@@ -32,6 +32,9 @@
         },
         "classmap": [
             "tests/_files"
+        ],
+        "files": [
+            "tests/_files/test-application/app/bootstrap.php"
         ]
     }
 }
