@@ -9,3 +9,4 @@ framework:
     secret: "%secret%"
     profiler:
         collect: false
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }

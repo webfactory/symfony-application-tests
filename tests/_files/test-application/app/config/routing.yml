@@ -1,0 +1,3 @@
+webfactory_test_bundle:
+    resource: "@WebfactoryTestBundle/Resources/config/routing.yml"
+    prefix:   /
