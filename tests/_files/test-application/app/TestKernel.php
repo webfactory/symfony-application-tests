@@ -19,8 +19,9 @@ class TestKernel extends Kernel
         return array(
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new JMS\AopBundle\JMSAopBundle(),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new \JMS\AopBundle\JMSAopBundle(),
+            new \JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Webfactory\TestBundle\WebfactoryTestBundle()
         );
     }

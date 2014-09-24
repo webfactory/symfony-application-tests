@@ -23,7 +23,8 @@
     },
 
     "require-dev": {
-        "symfony/browser-kit": "~2.2"
+        "symfony/browser-kit": "~2.2",
+        "symfony/twig-bundle": "~2.3"
     },
 
     "autoload-dev": {
