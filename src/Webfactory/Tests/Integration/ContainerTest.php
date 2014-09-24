@@ -221,15 +221,14 @@ class ContainerTest extends AbstractContainerTestCase
      *
      * @param string $tag
      * @param array(string) $namespacesToSkip A list of namespace prefixes that will be skipped.
-     * @param mixed $defaultEntry Entry that is returned if no services match.
      * @return array(array(object|null|string|array(string=>string)))
      */
-    protected function getTaggedServices($tag, array $namespacesToSkip = array(), $defaultEntry = array())
+    protected function getTaggedServices($tag, array $namespacesToSkip = array())
     {
         $container = $this->getContainerBuilder();
         $tagsById  = $container->findTaggedServiceIds($tag);
         if (count($tagsById) === 0) {
-            return array($defaultEntry);
+            return array(array());
         }
         $servicesAndDefinitions = array();
         foreach ($tagsById as $id => $tagDefinitions) {
