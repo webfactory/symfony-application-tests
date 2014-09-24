@@ -2,5 +2,5 @@
 phpunit.xml
 composer.phar
 /.idea/
-tests/_files/test-application/cache/*
-tests/_files/test-application/logs/*
+tests/_files/test-application/app/cache/*
+tests/_files/test-application/app/logs/*
