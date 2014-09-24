@@ -82,11 +82,49 @@ class TwigTemplateTest extends AbstractContainerTestCase
                 $viewDirectories[] = $viewDirectory;
             }
         }
-        $templates = Finder::create()->in($viewDirectories)->files()->name('*.*.twig');
+        $templates = $this->createFinder()->in($viewDirectories)->files()->name('*.*.twig');
         $templates = iterator_to_array($templates, false);
         $templates = array_map(function (SplFileInfo $file) {
             return $file->getRealPath();
         }, $templates);
         return $templates;
+    }
+
+    /**
+     * Creates a finder instance that automatically excludes files from vendor directories.
+     *
+     * The Finder's exclude() method accepts only relative paths, therefore we have to use
+     * a custom filter.
+     *
+     * @return Finder
+     */
+    protected function createFinder()
+    {
+        $vendorDirectory = $this->getVendorDirectory();
+        $finder = Finder::create()->filter(function (SplFileInfo $file) use ($vendorDirectory) {
+            // The file path must not start with the vendor directory.
+            return strpos($file->getPathname(), $vendorDirectory) !== 0;
+        });
+        return $finder;
+    }
+
+    /**
+     * Returns the path to the vendor directory.
+     *
+     * The implementation uses the file path of Composer's class loader to
+     * determine the vendor directory.
+     * This avoids problems, when the name of the vendor directory is changed.
+     *
+     * To make things more complex, it is even possible to change the vendor directory
+     * by passing environment variables during "composer install" or "composer update".
+     * In that case, the name of the vendor directory does not even appear in the composer.json.
+     *
+     * @return string
+     */
+    protected function getVendorDirectory()
+    {
+        $reflection = new \ReflectionClass('\Composer\Autoload\ClassLoader');
+        $classLoaderFilePath = $reflection->getFileName();
+        return dirname(dirname($classLoaderFilePath));
     }
 }
