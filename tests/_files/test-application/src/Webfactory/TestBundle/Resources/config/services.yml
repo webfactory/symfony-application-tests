@@ -6,3 +6,8 @@ services:
 
     webfactory_test.controller.secure_test:
         class: Webfactory\TestBundle\controller\SecureTestController
+
+    webfactory_test.form.contact_type:
+        class: Webfactory\TestBundle\Form\ContactType
+        tags:
+            - { name: form.type, alias: contact}
