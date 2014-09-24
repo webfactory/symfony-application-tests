@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\TestBundle\controller;
+namespace Webfactory\TestBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
