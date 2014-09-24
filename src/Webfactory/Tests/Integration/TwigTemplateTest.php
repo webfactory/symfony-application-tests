@@ -15,11 +15,14 @@ class TwigTemplateTest extends AbstractContainerTestCase
     /**
      * Checks if the provided Twig templates can be compiled.
      *
-     * @param string $templatePath The path to the template file.
+     * @param string|null $templatePath The path to the template file.
      * @dataProvider templateFileProvider
      */
-    public function testTemplateCanBeCompiled($templatePath)
+    public function testTemplateCanBeCompiled($templatePath = null)
     {
+        if ($templatePath === null) {
+            $this->markTestSkipped('No Twig templates found. Nothing to test.');
+        }
         $loader = new \Twig_Loader_Filesystem(dirname($templatePath));
         $twig   = $this->getTwigEnvironment();
         // Add the new loader to be able to load the template directly.
@@ -40,9 +43,13 @@ class TwigTemplateTest extends AbstractContainerTestCase
      */
     public function templateFileProvider()
     {
+        $templateFiles = $this->getTemplateFiles();
+        if (count($templateFiles) === 0) {
+            return array(array());
+        }
         return array_map(function ($path) {
             return array($path);
-        }, $this->getTemplateFiles());
+        }, $templateFiles);
     }
 
     /**
@@ -70,7 +77,15 @@ class TwigTemplateTest extends AbstractContainerTestCase
      */
     protected function getTemplateFiles()
     {
-        $templates = Finder::create()->in(__DIR__ . '/../../src')->files()->name('*.*.twig');
+        $kernel = static::createClient()->getKernel();
+        $viewDirectories = array();
+        foreach ($kernel->getBundles() as $bundle) {
+            $viewDirectory = $bundle->getPath() . '/Resources/views';
+            if (is_dir($viewDirectory)) {
+                $viewDirectories[] = $viewDirectory;
+            }
+        }
+        $templates = Finder::create()->in($viewDirectories)->files()->name('*.*.twig');
         $templates = iterator_to_array($templates, false);
         $templates = array_map(function (SplFileInfo $file) {
             return $file->getRealPath();
