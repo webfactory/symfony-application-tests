@@ -3,6 +3,10 @@
 namespace Webfactory\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * Base class for integration test cases.
@@ -33,6 +37,67 @@ abstract class AbstractContainerTestCase extends WebTestCase
                    . 'a class that implements the ContainerInterface is not enough.';
         $this->assertInstanceOf('\Symfony\Component\DependencyInjection\Container', $container, $message);
         return $container;
+    }
+
+    /**
+     * Reads the container debug dump and creates a container builder.
+     *
+     * The container builder must be used to get information about tagged services.
+     *
+     * @return ContainerBuilder
+     */
+    protected function getContainerBuilder()
+    {
+        $containerDebugDefinition = $this->getContainer()->getParameter('debug.container.dump');
+        if (!is_file($containerDebugDefinition)) {
+            $message = 'This test requires the container debug dump.';
+            $this->markTestSkipped($message);
+        }
+        $container = new ContainerBuilder();
+        $loader    = new XmlFileLoader($container, new FileLocator());
+        $loader->load($containerDebugDefinition);
+        return $container;
+    }
+
+    /**
+     * Returns tagged (custom) services from the service container.
+     *
+     * The result contains one array for each tag definition.
+     * Each array contains the service ID as first, the service
+     * as second and the tag definition as third item.
+     *
+     * @param string $tag
+     * @param array(string) $namespacesToSkip A list of namespace prefixes that will be skipped.
+     * @return array(array(object|null|string|array(string=>string)))
+     */
+    protected function getTaggedServices($tag, array $namespacesToSkip = array())
+    {
+        $container = $this->getContainerBuilder();
+        $tagsById  = $container->findTaggedServiceIds($tag);
+        $servicesAndDefinitions = array();
+        foreach ($tagsById as $id => $tagDefinitions) {
+            /* @var $id string */
+            /* @var $tagDefinitions array(array(string=>string)) */
+            if ($container->has($id)) {
+                $class = $container->findDefinition($id)->getClass();
+                foreach ($namespacesToSkip as $namespacePrefix) {
+                    /* @var $namespacePrefix string */
+                    if (strpos($class, $namespacePrefix) === 0) {
+                        // Skip types that are defined in ignored namespaces.
+                        continue 2;
+                    }
+                }
+            }
+            foreach ($tagDefinitions as $tagDefinition) {
+                /* @var $tagDefinition array(string=>string) */
+                $servicesAndDefinitions[] = array(
+                    $id,
+                    $container->get($id, Container::NULL_ON_INVALID_REFERENCE),
+                    $tagDefinition
+                );
+            }
+        }
+        return $this->addFallbackEntryToProviderDataIfNecessary($servicesAndDefinitions);
     }
 
     /**

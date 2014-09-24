@@ -3,46 +3,12 @@
 namespace Webfactory\Tests\Integration;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * Checks the service container.
  */
 class ContainerTest extends AbstractContainerTestCase
 {
-    /**
-     * Checks if the aliases for form types and their names are equal.
-     *
-     * Form types cannot be used if this is not the case.
-     *
-     * @param string|null $id The ID of the type service.
-     * @param \Symfony\Component\Form\FormTypeInterface|mixed $type The type service from the container.
-     * @param array(string=>string) $tagDefinition The tag definition that is assigned to the type.
-     * @dataProvider getFormTypes
-     */
-    public function testFormTypeAliasAndNameAreEqual($id = null, $type = null, array $tagDefinition = array())
-    {
-        if ($id === null && $type === null) {
-            $this->markTestSkipped('No form types registered, nothing to test.');
-        }
-        $message = 'An alias must be defined for form type "%s".';
-        $message = sprintf($message, $id);
-        $this->assertArrayHasKey('alias', $tagDefinition, $message);
-
-        /* @var $type \Symfony\Component\Form\FormTypeInterface */
-        $message = 'Service "%s" is tagged as form type, but it does not implement the required interface.';
-        $message = sprintf($message, $id);
-        $this->assertInstanceOf('\Symfony\Component\Form\FormTypeInterface', $type, $message);
-
-        $message = 'Form type name and assigned alias must match, but service "%s" '
-                 . 'uses "%s" as name and "%s" as alias.';
-        $message = sprintf($message, $id, $type->getName(), $tagDefinition['alias']);
-        $this->assertEquals($type->getName(), $tagDefinition['alias'], $message);
-    }
-
     /**
      * Checks if the validators that are configured in the container implement
      * the correct interface.
@@ -185,57 +151,6 @@ class ContainerTest extends AbstractContainerTestCase
     }
 
     /**
-     * Returns record sets of form types and their corresponding aliases.
-     *
-     * @return array(array(string|object|null|array))
-     */
-    public function getFormTypes()
-    {
-        return $this->getTaggedServices('form.type', array('Symfony'));
-    }
-
-    /**
-     * Returns tagged (custom) services from the service container.
-     *
-     * The result contains one array for each tag definition.
-     * Each array contains the service ID as first, the service
-     * as second and the tag definition as third item.
-     *
-     * @param string $tag
-     * @param array(string) $namespacesToSkip A list of namespace prefixes that will be skipped.
-     * @return array(array(object|null|string|array(string=>string)))
-     */
-    protected function getTaggedServices($tag, array $namespacesToSkip = array())
-    {
-        $container = $this->getContainerBuilder();
-        $tagsById  = $container->findTaggedServiceIds($tag);
-        $servicesAndDefinitions = array();
-        foreach ($tagsById as $id => $tagDefinitions) {
-            /* @var $id string */
-            /* @var $tagDefinitions array(array(string=>string)) */
-            if ($container->has($id)) {
-                $class = $container->findDefinition($id)->getClass();
-                foreach ($namespacesToSkip as $namespacePrefix) {
-                    /* @var $namespacePrefix string */
-                    if (strpos($class, $namespacePrefix) === 0) {
-                        // Skip types that are defined in ignored namespaces.
-                        continue 2;
-                    }
-                }
-            }
-            foreach ($tagDefinitions as $tagDefinition) {
-                /* @var $tagDefinition array(string=>string) */
-                $servicesAndDefinitions[] = array(
-                    $id,
-                    $container->get($id, Container::NULL_ON_INVALID_REFERENCE),
-                    $tagDefinition
-                );
-            }
-        }
-        return $this->addFallbackEntryToProviderDataIfNecessary($servicesAndDefinitions);
-    }
-
-    /**
      * Returns a list of roles that exist in the system.
      *
      * @return array(string)
@@ -249,25 +164,5 @@ class ContainerTest extends AbstractContainerTestCase
             $roles = array_merge($roles, $inheritedRoles);
         }
         return array_unique($roles);
-    }
-
-    /**
-     * Reads the container debug dump and creates a container builder.
-     *
-     * The container builder must be used to get information about tagged services.
-     *
-     * @return ContainerBuilder
-     */
-    protected function getContainerBuilder()
-    {
-        $containerDebugDefinition = $this->getContainer()->getParameter('debug.container.dump');
-        if (!is_file($containerDebugDefinition)) {
-            $message = 'This test requires the container debug dump.';
-            $this->markTestSkipped($message);
-        }
-        $container = new ContainerBuilder();
-        $loader = new XmlFileLoader($container, new FileLocator());
-        $loader->load($containerDebugDefinition);
-        return $container;
     }
 }
