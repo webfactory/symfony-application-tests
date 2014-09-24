@@ -156,11 +156,7 @@ class ContainerTest extends AbstractContainerTestCase
                 $records[] = array($method, $annotation);
             }
         }
-        if (count($records) === 0) {
-            // Return a dummy entry, which indicates that the test can be skipped.
-            return array(array());
-        }
-        return $records;
+        return $this->addFallbackEntryToProviderDataIfNecessary($records);
     }
 
     /**
@@ -227,9 +223,6 @@ class ContainerTest extends AbstractContainerTestCase
     {
         $container = $this->getContainerBuilder();
         $tagsById  = $container->findTaggedServiceIds($tag);
-        if (count($tagsById) === 0) {
-            return array(array());
-        }
         $servicesAndDefinitions = array();
         foreach ($tagsById as $id => $tagDefinitions) {
             /* @var $id string */
@@ -253,7 +246,7 @@ class ContainerTest extends AbstractContainerTestCase
                 );
             }
         }
-        return $servicesAndDefinitions;
+        return $this->addFallbackEntryToProviderDataIfNecessary($servicesAndDefinitions);
     }
 
     /**

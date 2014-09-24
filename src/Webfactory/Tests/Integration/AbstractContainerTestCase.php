@@ -34,4 +34,24 @@ abstract class AbstractContainerTestCase extends WebTestCase
         $this->assertInstanceOf('\Symfony\Component\DependencyInjection\Container', $container, $message);
         return $container;
     }
+
+    /**
+     * If necessary, adds null entry to a list of method arguments, which were returned by a data provider.
+     *
+     * If a data provider returns an empty array, then the test fails. Therefore, this method adds an
+     * entry if no data was gathered by a provider.
+     * This entry does not provide any argument, so the test that works with the data should use
+     * only optional parameters and handle that special case (for example by skipping the test).
+     *
+     * @param array(array(mixed)) $providerData
+     * @return array(array(mixed))
+     * @see https://phpunit.de/manual/3.9/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.data-providers
+     */
+    protected function addFallbackEntryToProviderDataIfNecessary(array $providerData)
+    {
+        if (count($providerData) === 0) {
+            return array(array());
+        }
+        return $providerData;
+    }
 }

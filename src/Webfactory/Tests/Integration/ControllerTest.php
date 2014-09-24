@@ -58,14 +58,11 @@ class ControllerTest extends AbstractContainerTestCase
             }
             $classes[] = $definition->class;
         }
-        if (count($classes) === 0) {
-            // Return a dummy entry to avoid a failing test.
-            return array(array());
-        }
         $classes = array_unique($classes);
-        return array_map(function ($class) {
+        $data    = array_map(function ($class) {
             return array($class);
         }, $classes);
+        return $this->addFallbackEntryToProviderDataIfNecessary($data);
     }
 
     /**

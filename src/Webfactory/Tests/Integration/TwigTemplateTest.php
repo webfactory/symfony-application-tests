@@ -43,12 +43,10 @@ class TwigTemplateTest extends AbstractContainerTestCase
     public function templateFileProvider()
     {
         $templateFiles = $this->getTemplateFiles();
-        if (count($templateFiles) === 0) {
-            return array(array());
-        }
-        return array_map(function ($path) {
+        $templateData  = array_map(function ($path) {
             return array($path);
         }, $templateFiles);
+        return $this->addFallbackEntryToProviderDataIfNecessary($templateData);
     }
 
     /**
