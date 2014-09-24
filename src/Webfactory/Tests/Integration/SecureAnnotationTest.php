@@ -129,7 +129,11 @@ class SecureAnnotationTest extends AbstractContainerTestCase
      */
     protected function getExistingRoles()
     {
-        $hierarchy = $this->getContainer()->getParameter('security.role_hierarchy.roles');
+        $container = $this->getContainer();
+        $message = 'Cannot read roles from parameter "security.role_hierarchy.roles". '
+                 . 'Did you configure the security system?';
+        $this->assertTrue($container->hasParameter('security.role_hierarchy.roles'), $message);
+        $hierarchy = $container->getParameter('security.role_hierarchy.roles');
         $roles = array_keys($hierarchy);
         foreach ($hierarchy as $inheritedRoles) {
             /* $inheritedRoles array(string) */
