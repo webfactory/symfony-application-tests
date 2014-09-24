@@ -101,6 +101,30 @@ abstract class AbstractContainerTestCase extends WebTestCase
     }
 
     /**
+     * Returns the class name of the kernel that is used in the tests.
+     *
+     * Besides Symfony's default kernel detection, this method allows providing a
+     * kernel class via KERNEL_CLASS environment variable.
+     * The provided class must be loadable by the class loader.
+     *
+     * @return string
+     * @throws \InvalidArgumentException If a kernel class was provided, but it is not available via class loader.
+     * @see http://symfony.com/doc/current/book/testing.html#your-first-functional-test
+     */
+    protected static function getKernelClass()
+    {
+        if (isset($_SERVER['KERNEL_CLASS'])) {
+            if (!class_exists($_SERVER['KERNEL_CLASS'], true)) {
+                $message = 'The kernel class that is provided via KERNEL_CLASS environment variable must '
+                         . 'be available by class loader.';
+                throw new \InvalidArgumentException($message);
+            }
+            return $_SERVER['KERNEL_CLASS'];
+        }
+        return parent::getKernelClass();
+    }
+
+    /**
      * If necessary, adds null entry to a list of method arguments, which were returned by a data provider.
      *
      * If a data provider returns an empty array, then the test fails. Therefore, this method adds an
