@@ -11,3 +11,8 @@ services:
         class: Webfactory\TestBundle\Form\ContactType
         tags:
             - { name: form.type, alias: contact}
+
+    webfactory_test.validator.custom:
+        class: Webfactory\TestBundle\Validator\Constraints\CustomValidator
+        tags:
+            - { name: validator.constraint_validator, alias: webfactory_test.validator.custom }
