@@ -5,7 +5,7 @@ namespace Webfactory\Tests\Integration;
 /**
  * Checks if form types are configured correctly.
  */
-class FormTest extends AbstractContainerTestCase
+class FormTypeTest extends AbstractContainerTestCase
 {
     /**
      * Checks if the aliases for form types and their names are equal.
