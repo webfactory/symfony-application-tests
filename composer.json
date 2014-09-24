@@ -30,11 +30,9 @@
 
     "autoload-dev": {
         "psr-0": {
-            "Webfactory\\Tests": "src/"
+            "Webfactory\\Tests": "src/",
+            "Webfactory\\TestBundle": "tests/_files/test-application/src"
         },
-        "classmap": [
-            "tests/_files"
-        ],
         "files": [
             "tests/_files/test-application/app/bootstrap.php"
         ]
