@@ -22,6 +22,7 @@ class TestKernel extends Kernel
             new \JMS\AopBundle\JMSAopBundle(),
             new \JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new \Webfactory\TestBundle\WebfactoryTestBundle()
         );
     }

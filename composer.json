@@ -24,7 +24,8 @@
 
     "require-dev": {
         "symfony/browser-kit": "~2.2",
-        "symfony/twig-bundle": "~2.3"
+        "symfony/twig-bundle": "~2.3",
+        "sensio/framework-extra-bundle": "~2.3"
     },
 
     "autoload-dev": {
