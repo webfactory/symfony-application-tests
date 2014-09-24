@@ -3,9 +3,9 @@
 namespace Webfactory\Tests\Integration;
 
 /**
- * Checks the service container.
+ * Tests the registered Twig extensions.
  */
-class ContainerTest extends AbstractContainerTestCase
+class TwigExtensionTest extends AbstractContainerTestCase
 {
     /**
      * Checks if registered Twig extensions implement the correct interface.
