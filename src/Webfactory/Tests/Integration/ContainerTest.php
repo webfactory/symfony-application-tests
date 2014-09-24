@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
  */
 class ContainerTest extends AbstractContainerTestCase
 {
-
     /**
      * Checks if it is possible to create instances of the defined services.
      */
@@ -293,5 +292,4 @@ class ContainerTest extends AbstractContainerTestCase
         $loader->load($containerDebugDefinition);
         return $container;
     }
-
 }

@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ControllerTest extends AbstractContainerTestCase
 {
-
     /**
      * Ensures that controllers, which are not defined as service, do not use
      * "secure" annotations (these would be ignored).
@@ -155,5 +154,4 @@ class ControllerTest extends AbstractContainerTestCase
         }
         return $controller;
     }
-
 }

@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 abstract class AbstractContainerTestCase extends WebTestCase
 {
-
     /**
      * Returns the annotation reader that is used by the application.
      *
@@ -35,5 +34,4 @@ abstract class AbstractContainerTestCase extends WebTestCase
         $this->assertInstanceOf('\Symfony\Component\DependencyInjection\Container', $container, $message);
         return $container;
     }
-
 }

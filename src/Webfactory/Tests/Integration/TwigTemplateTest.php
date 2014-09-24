@@ -11,7 +11,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class TwigTemplateTest extends AbstractContainerTestCase
 {
-
     /**
      * Checks if the provided Twig templates can be compiled.
      *
@@ -92,5 +91,4 @@ class TwigTemplateTest extends AbstractContainerTestCase
         }, $templates);
         return $templates;
     }
-
 }
