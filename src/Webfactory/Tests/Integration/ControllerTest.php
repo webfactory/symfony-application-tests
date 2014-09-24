@@ -66,16 +66,6 @@ class ControllerTest extends AbstractContainerTestCase
     }
 
     /**
-     * Returns the annotation reader that is used by the application.
-     *
-     * @return \Doctrine\Common\Annotations\Reader
-     */
-    protected function getAnnotationReader()
-    {
-        return $this->getContainer()->get('annotation_reader');
-    }
-
-    /**
      * Returns information about controllers that are used in the application.
      *
      * The data entries are simple objects that provide the following attributes:
