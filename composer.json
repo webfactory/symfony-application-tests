@@ -28,9 +28,14 @@
         "sensio/framework-extra-bundle": "~2.3"
     },
 
+    "autoload": {
+        "psr-0": {
+            "Webfactory\\Tests": "src/"
+        }
+    },
+
     "autoload-dev": {
         "psr-0": {
-            "Webfactory\\Tests": "src/",
             "Webfactory\\TestBundle": "tests/_files/test-application/src"
         },
         "files": [
