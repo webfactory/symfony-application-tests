@@ -29,6 +29,9 @@
     "autoload-dev": {
         "psr-0": {
             "Webfactory\\Tests": "src/"
-        }
+        },
+        "classmap": [
+            "tests/_files"
+        ]
     }
 }
