@@ -1,5 +1,7 @@
 # Symfony Application Tests #
 
+[![Build Status](https://travis-ci.org/webfactory/symfony-application-tests.svg?branch=master)](https://travis-ci.org/webfactory/symfony-application-tests)
+
 Generic functional tests that can be applied to any Symfony application.
 
 ## Usage ##
