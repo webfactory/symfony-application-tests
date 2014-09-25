@@ -76,6 +76,10 @@ class TwigTemplateTest extends AbstractContainerTestCase
     {
         $kernel = static::createClient()->getKernel();
         $viewDirectories = array();
+        $globalResourceDirectory = $kernel->getRootDir() . '/Resources';
+        if (is_dir($globalResourceDirectory)) {
+            $viewDirectories[] = $globalResourceDirectory;
+        }
         foreach ($kernel->getBundles() as $bundle) {
             $viewDirectory = $bundle->getPath() . '/Resources/views';
             if (is_dir($viewDirectory)) {
