@@ -1,6 +1,6 @@
 # Symfony Application Tests #
 
-Generic function tests that can be applied to any Symfony application.
+Generic functional tests that can be applied to any Symfony application.
 
 ## Usage ##
 
