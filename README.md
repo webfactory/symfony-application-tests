@@ -19,7 +19,7 @@ Therefore, you might have to configure your kernel directory:
 
     ```xml
         <php>
-            <server name="KERNEL_DIR" value="tests/_files/test-application/app" />
+            <server name="KERNEL_DIR" value="/path/to/your/app/" />
         </php>
     ```
 
