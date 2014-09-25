@@ -34,4 +34,4 @@ to configure the class of the kernel:
     </php>
 ```
 
-To make this work the kernel must be loadable by the class loader.
+To make this work, the kernel must be loadable by the class loader.
