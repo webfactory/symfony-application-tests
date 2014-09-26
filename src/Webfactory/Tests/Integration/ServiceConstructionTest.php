@@ -23,7 +23,7 @@ class ServiceConstructionTest extends AbstractContainerTestCase
             try {
                 $container->get($id, Container::NULL_ON_INVALID_REFERENCE);
             } catch (\Exception $e) {
-                if (($e instanceof RuntimeException) && strpos($e->getMessage(), 'requested a synthetic service') !== false) {
+                if ($this->isCausedBySyntheticServiceRequest($e)) {
                     // Skip services that are or that depend on synthetic services. It is simply not
                     // possible to create them in a reliable way.
                     continue;
@@ -33,5 +33,16 @@ class ServiceConstructionTest extends AbstractContainerTestCase
             }
         }
         $this->assertTrue(strlen($message) === 0, $message);
+    }
+
+    /**
+     * Checks if a request for a synthetic service caused the provided exception.
+     *
+     * @param \Exception $e
+     * @return boolean
+     */
+    protected function isCausedBySyntheticServiceRequest($e)
+    {
+        return ($e instanceof RuntimeException) && strpos($e->getMessage(), 'requested a synthetic service') !== false;
     }
 }
