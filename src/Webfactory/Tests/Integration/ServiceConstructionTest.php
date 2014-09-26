@@ -16,10 +16,16 @@ class ServiceConstructionTest extends AbstractContainerTestCase
     {
         $container = $this->getContainer();
 
-        $this->setExpectedException(null);
+        $message = '';
         foreach ($container->getServiceIds() as $id) {
             /* @var $id string */
-            $container->get($id, Container::NULL_ON_INVALID_REFERENCE);
+            try {
+                $container->get($id, Container::NULL_ON_INVALID_REFERENCE);
+            } catch (\Exception $e) {
+                $message .= 'Cannot create service "' . $id . '":' . PHP_EOL;
+                $message .= $e . PHP_EOL . PHP_EOL;
+            }
         }
+        $this->assertTrue(strlen($message) === 0, $message);
     }
 }
