@@ -19,3 +19,7 @@ services:
 
     webfactory_test.advanced.synthetic_service:
         synthetic: true
+
+    webfactory_test.advanced.depending_on_synthetic_service:
+        class: ArrayObject
+        arguments: [[@webfactory_test.advanced.synthetic_service]]
