@@ -16,3 +16,6 @@ services:
         class: Webfactory\TestBundle\Validator\Constraints\CustomValidator
         tags:
             - { name: validator.constraint_validator, alias: webfactory_test.validator.custom }
+
+    webfactory_test.advanced.synthetic_service:
+        synthetic: true
