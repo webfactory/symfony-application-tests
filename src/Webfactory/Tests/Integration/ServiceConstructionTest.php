@@ -38,11 +38,14 @@ class ServiceConstructionTest extends AbstractContainerTestCase
     /**
      * Checks if a request for a synthetic service caused the provided exception.
      *
-     * @param \Exception $e
+     * @param \Exception $exception
      * @return boolean
      */
-    protected function isCausedBySyntheticServiceRequest($e)
+    protected function isCausedBySyntheticServiceRequest($exception)
     {
-        return ($e instanceof RuntimeException) && strpos($e->getMessage(), 'requested a synthetic service') !== false;
+        if (!($exception instanceof RuntimeException)) {
+            return false;
+        }
+        return strpos($exception->getMessage(), 'requested a synthetic service') !== false;
     }
 }
