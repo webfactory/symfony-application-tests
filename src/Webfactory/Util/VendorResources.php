@@ -16,6 +16,20 @@ namespace Webfactory\Util;
 class VendorResources
 {
     /**
+     * Checks if the given class is located in the vendor directory.
+     *
+     * For convenience, it is also possible to pass an object whose
+     * class is then checked.
+     *
+     * @param string|object $classNameOrObject
+     * @return boolean
+     */
+    public static function isVendorClass($classNameOrObject)
+    {
+
+    }
+
+    /**
      * Returns the path to the vendor directory.
      *
      * @return string
