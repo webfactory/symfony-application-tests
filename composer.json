@@ -46,6 +46,9 @@
         "psr-0": {
             "Webfactory\\TestBundle": "tests/_files/test-application/src"
         },
+        "classmap": [
+            "tests/_files/test-application/app/TestKernel.php"
+        ],
         "files": [
             "tests/_files/test-application/app/bootstrap.php"
         ]
