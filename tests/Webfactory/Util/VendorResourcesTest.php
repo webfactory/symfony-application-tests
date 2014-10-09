@@ -83,4 +83,29 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException');
         VendorResources::isVendorClass('NoValidClassName');
     }
+
+    public function testIsVendorFileReturnsFalseIfFileIsNotLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorFileReturnsTrueIfFileIsLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorFileReturnsFalseIfFileThatIsReferencedByFileObjectIsNotLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorFileReturnsTrueIfFileThatIsReferencedByFileObjectIsLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorFileThrowsExceptionIfNoValidFileReferenceIsProvided()
+    {
+
+    }
 }
