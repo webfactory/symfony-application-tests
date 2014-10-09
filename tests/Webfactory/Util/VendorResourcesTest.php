@@ -90,7 +90,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileReturnsFalseIfFileIsNotLocatedInVendorDirectory()
     {
-
+        $this->assertFalse(VendorResources::isVendorFile(__FILE__));
     }
 
     /**
@@ -99,7 +99,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileReturnsTrueIfFileIsLocatedInVendorDirectory()
     {
-
+        $this->assertTrue(VendorResources::isVendorFile($this->getVendorFilePath()));
     }
 
     /**
@@ -108,7 +108,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileReturnsFalseIfFileThatIsReferencedByFileObjectIsNotLocatedInVendorDirectory()
     {
-
+        $this->assertFalse(VendorResources::isVendorFile(new \SplFileInfo(__FILE__)));
     }
 
     /**
@@ -117,7 +117,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileReturnsTrueIfFileThatIsReferencedByFileObjectIsLocatedInVendorDirectory()
     {
-
+        $this->assertTrue(VendorResources::isVendorFile(new \SplFileInfo($this->getVendorFilePath())));
     }
 
     /**
@@ -126,6 +126,18 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileThrowsExceptionIfNoValidFileReferenceIsProvided()
     {
+        $this->setExpectedException('InvalidArgumentException');
+        VendorResources::isVendorFile(__DIR__ . '/this/files/does/not/exist');
+    }
 
+    /**
+     * Returns the path to a file in the vendor directory.
+     *
+     * @return string
+     */
+    protected function getVendorFilePath()
+    {
+        $reflection = new \ReflectionClass('Composer\Autoload\ClassLoader');
+        return $reflection->getFileName();
     }
 }
