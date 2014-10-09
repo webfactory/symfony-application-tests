@@ -33,7 +33,10 @@ class VendorResources
             throw new \InvalidArgumentException($message);
         }
         $reflection = new \ReflectionClass($className);
-        return strpos($reflection->getFileName(), static::getVendorDirectory()) === 0;
+        if ($reflection->isInternal()) {
+            return false;
+        }
+        return static::isVendorFile($reflection->getFileName());
     }
 
     /**
