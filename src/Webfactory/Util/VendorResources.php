@@ -45,7 +45,12 @@ class VendorResources
      */
     public static function isVendorFile($pathOrFileObject)
     {
-
+        $path = ($pathOrFileObject instanceof \SplFileInfo) ? $pathOrFileObject->getPathname() : $pathOrFileObject;
+        if (!is_file($path)) {
+            $message = '"' . $path . '" does not reference a file or directory.';
+            throw new \InvalidArgumentException($message);
+        }
+        return strpos($path, static::getVendorDirectory()) === 0;
     }
 
     /**
