@@ -5,6 +5,8 @@ namespace Webfactory\Tests\Integration;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Webfactory\Util\ApplicationBundleReader;
 use Webfactory\Util\VendorResources;
 
 /**
@@ -81,7 +83,8 @@ class TwigTemplateTest extends AbstractContainerTestCase
         if (is_dir($globalResourceDirectory)) {
             $viewDirectories[] = $globalResourceDirectory;
         }
-        foreach ($kernel->getBundles() as $bundle) {
+        foreach (new ApplicationBundleReader($kernel) as $bundle) {
+            /* @var $bundle BundleInterface */
             $viewDirectory = $bundle->getPath() . '/Resources/views';
             if (is_dir($viewDirectory)) {
                 $viewDirectories[] = $viewDirectory;
