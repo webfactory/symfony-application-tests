@@ -2,6 +2,7 @@
 
 namespace Webfactory\Util;
 
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -12,13 +13,20 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class ApplicationBundleReader implements \IteratorAggregate
 {
     /**
+     * The kernel whose bundles are filtered.
+     *
+     * @var KernelInterface
+     */
+    protected $kernel = null;
+
+    /**
      * Creates a reader that retrieves the bundles from the given kernel.
      *
      * @param KernelInterface $kernel
      */
     public function __construct(KernelInterface $kernel)
     {
-
+        $this->kernel = $kernel;
     }
 
     /**
@@ -29,6 +37,11 @@ class ApplicationBundleReader implements \IteratorAggregate
      */
     public function getIterator()
     {
-        // TODO: Implement getIterator() method.
+        $this->kernel->boot();
+        $bundles = $this->kernel->getBundles();
+        $applicationBundles = array_filter($bundles, function (BundleInterface $bundle) {
+            return !VendorResources::isVendorClass($bundle);
+        });
+        return new \ArrayIterator($applicationBundles);
     }
 }
