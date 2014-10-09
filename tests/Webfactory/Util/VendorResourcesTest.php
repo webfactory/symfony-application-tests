@@ -1,6 +1,8 @@
 <?php
 
 namespace Webfactory\Util;
+use Composer\Autoload\ClassLoader;
+use Webfactory\TestBundle\Form\ContactType;
 
 /**
  * Tests the vendor directory helper methods.
@@ -33,7 +35,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassReturnsFalseIfClassIsNotLocatedInVendorDirectory()
     {
-
+        $this->assertFalse(VendorResources::isVendorClass('\Webfactory\Util\VendorResources'));
     }
 
     /**
@@ -42,7 +44,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassReturnsFalseIfNameOfInternalClassIsPassed()
     {
-
+        $this->assertFalse(VendorResources::isVendorClass('\stdClass'));
     }
 
     /**
@@ -51,7 +53,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassReturnsTrueIfClassIsLocatedInVendorDirectory()
     {
-
+        $this->assertTrue(VendorResources::isVendorClass('\Composer\Autoload\ClassLoader'));
     }
 
     /**
@@ -60,7 +62,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassReturnsFalseIfClassOfObjectIsNotLocatedInVendorDirectory()
     {
-
+        $this->assertFalse(VendorResources::isVendorClass(new ContactType()));
     }
 
     /**
@@ -69,7 +71,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassReturnsTrueIfClassOfObjectIsLocatedInVendorDirectory()
     {
-
+        $this->assertTrue(VendorResources::isVendorClass(new ClassLoader()));
     }
 
     /**
@@ -78,6 +80,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassThrowsExceptionIfNoClassNameOrObjectIsPassed()
     {
-
+        $this->setExpectedException('InvalidArgumentException');
+        VendorResources::isVendorClass('NoValidClassName');
     }
 }
