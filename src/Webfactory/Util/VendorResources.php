@@ -37,6 +37,18 @@ class VendorResources
     }
 
     /**
+     * Checks if the given file is located in the vendor directory.
+     *
+     * @param string|\SplFileInfo $pathOrFileObject
+     * @return boolean
+     * @throws \InvalidArgumentException If no valid file path is provided.
+     */
+    public static function isVendorFile($pathOrFileObject)
+    {
+
+    }
+
+    /**
      * Returns the path to the vendor directory.
      *
      * @return string
