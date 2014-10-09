@@ -22,6 +22,8 @@ class VendorResources
      */
     public static function getVendorDirectory()
     {
-
+        $reflection = new \ReflectionClass('\Composer\Autoload\ClassLoader');
+        $classLoaderFilePath = $reflection->getFileName();
+        return dirname(dirname($classLoaderFilePath));
     }
 }
