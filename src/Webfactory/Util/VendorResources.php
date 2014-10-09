@@ -23,10 +23,17 @@ class VendorResources
      *
      * @param string|object $classNameOrObject
      * @return boolean
+     * @throws \InvalidArgumentException If no valid class name or object is passed.
      */
     public static function isVendorClass($classNameOrObject)
     {
-
+        $className = (is_object($classNameOrObject)) ?  get_class($classNameOrObject) : $classNameOrObject;
+        if (!class_exists($className)) {
+            $message = '"' . $className . '" is not the name of a loadable class.';
+            throw new \InvalidArgumentException($message);
+        }
+        $reflection = new \ReflectionClass($className);
+        return strpos($reflection->getFileName(), static::getVendorDirectory()) === 0;
     }
 
     /**
