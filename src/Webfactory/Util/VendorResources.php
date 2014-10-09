@@ -53,6 +53,7 @@ class VendorResources
             $message = '"' . $path . '" does not reference a file or directory.';
             throw new \InvalidArgumentException($message);
         }
+        // The file path must start with the vendor directory.
         return strpos($path, static::getVendorDirectory()) === 0;
     }
 
