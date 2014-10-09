@@ -37,7 +37,8 @@
 
     "autoload": {
         "psr-0": {
-            "Webfactory\\Tests": "src/"
+            "Webfactory\\Tests": "src/",
+            "Webfactory\\Util": "src/"
         }
     },
 
