@@ -37,7 +37,7 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->reader);
     }
 
     /**
@@ -45,7 +45,7 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderIteratesOverBundles()
     {
-
+        $this->assertContainsOnly('\Symfony\Component\HttpKernel\Bundle\BundleInterface', $this->reader);
     }
 
     /**
@@ -53,7 +53,9 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderReturnsApplicationBundles()
     {
+        $bundleClasses = $this->getBundleClassesFromReader();
 
+        $this->assertContains('\Webfactory\TestBundle\WebfactoryTestBundle', $bundleClasses);
     }
 
     /**
@@ -62,6 +64,18 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderDoesNotReturnActiveVendorBundles()
     {
+        $bundleClasses = $this->getBundleClassesFromReader();
 
+        $this->assertNotContains('\Symfony\Bundle\FrameworkBundle\FrameworkBundle', $bundleClasses);
+    }
+
+    /**
+     * Returns the classes of the bundles that are returned by the reader.
+     *
+     * @return string[]
+     */
+    protected function getBundleClassesFromReader()
+    {
+        return array_map('get_class', iterator_to_array($this->reader));
     }
 }
