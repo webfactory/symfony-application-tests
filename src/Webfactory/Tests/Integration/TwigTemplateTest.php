@@ -71,7 +71,7 @@ class TwigTemplateTest extends AbstractContainerTestCase
     }
 
     /**
-     * Returns the paths to the template files in this project.
+     * Returns the paths to the template files in this application.
      *
      * @return array(string)
      */
