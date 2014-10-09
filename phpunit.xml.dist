@@ -10,6 +10,7 @@
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>src/Webfactory/Tests/</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
