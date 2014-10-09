@@ -55,7 +55,7 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
     {
         $bundleClasses = $this->getBundleClassesFromReader();
 
-        $this->assertContains('\Webfactory\TestBundle\WebfactoryTestBundle', $bundleClasses);
+        $this->assertContains('Webfactory\TestBundle\WebfactoryTestBundle', $bundleClasses);
     }
 
     /**
@@ -66,7 +66,7 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
     {
         $bundleClasses = $this->getBundleClassesFromReader();
 
-        $this->assertNotContains('\Symfony\Bundle\FrameworkBundle\FrameworkBundle', $bundleClasses);
+        $this->assertNotContains('Symfony\Bundle\FrameworkBundle\FrameworkBundle', $bundleClasses);
     }
 
     /**
