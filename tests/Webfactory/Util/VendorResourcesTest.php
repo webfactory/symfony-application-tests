@@ -26,4 +26,29 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(realpath($vendorDirectory), realpath(VendorResources::getVendorDirectory()));
     }
+
+    public function testIsVendorClassReturnsFalseIfClassIsNotLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorClassReturnsTrueIfClassIsLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorClassReturnsFalseIfClassOfObjectIsNotLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorClassReturnsTrueIfClassOfObjectIsLocatedInVendorDirectory()
+    {
+
+    }
+
+    public function testIsVendorClassThrowsExceptionIfNoClassNameOrObjectIsPassed()
+    {
+
+    }
 }
