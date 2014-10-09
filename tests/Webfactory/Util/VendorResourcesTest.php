@@ -84,26 +84,46 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
         VendorResources::isVendorClass('NoValidClassName');
     }
 
+    /**
+     * Ensures that isVendorFile() returns false if the given file is not located in
+     * the vendor directory.
+     */
     public function testIsVendorFileReturnsFalseIfFileIsNotLocatedInVendorDirectory()
     {
 
     }
 
+    /**
+     * Ensures that isVendorFile() returns true if the given file is located in the
+     * vendor directory.
+     */
     public function testIsVendorFileReturnsTrueIfFileIsLocatedInVendorDirectory()
     {
 
     }
 
+    /**
+     * Ensures that isVendorFile() returns false if a \SplFileObject is passed and the referenced
+     * file is not located in the vendor directory.
+     */
     public function testIsVendorFileReturnsFalseIfFileThatIsReferencedByFileObjectIsNotLocatedInVendorDirectory()
     {
 
     }
 
+    /**
+     * Ensures that isVendorFile() returns true if a \SplFileObject is passed and the referenced
+     * file is located in the vendor directory.
+     */
     public function testIsVendorFileReturnsTrueIfFileThatIsReferencedByFileObjectIsLocatedInVendorDirectory()
     {
 
     }
 
+    /**
+     * Ensures that isVendorFile() throws an exception if the given path does not reference
+     * an existing file.
+     */
     public function testIsVendorFileThrowsExceptionIfNoValidFileReferenceIsProvided()
     {
 
