@@ -3,6 +3,7 @@
 namespace Webfactory\Util;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests the service instance iterator.
@@ -51,7 +52,7 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->iterator);
     }
 
     /**
@@ -59,7 +60,11 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorCreatesServiceWithGivenId()
     {
+        $definition = new Definition('stdClass');
+        $this->container->setDefinition('my.service', $definition);
 
+        $this->assertContainsOnly('stdClass', $this->iterator);
+        $this->assertEquals(1, iterator_count($this->iterator));
     }
 
     /**
@@ -67,7 +72,12 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorDoesNotCreateServicesWhoseIdIsNotListed()
     {
+        $definition = new Definition('stdClass');
+        $this->container->setDefinition('my.service', $definition);
+        $anotherDefinition = new Definition('stdClass');
+        $this->container->setDefinition('another.service', $anotherDefinition);
 
+        $this->assertEquals(1, iterator_count($this->iterator));
     }
 
     /**
@@ -76,7 +86,11 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorIgnoresSyntheticServicesEvenIfIdIsListed()
     {
+        $definition = new Definition();
+        $definition->setSynthetic(true);
+        $this->container->setDefinition('my.service', $definition);
 
+        $this->assertEquals(0, iterator_count($this->iterator));
     }
 
     /**
@@ -85,6 +99,11 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorThrowsExceptionIfItIsNotPossibleToCreateService()
     {
+        $definition = new Definition();
+        $definition->setFactoryClass('Webfactory\Missing');
+        $definition->setFactoryMethod('create');
+        $this->container->setDefinition('my.service', $definition);
 
+        iterator_to_array($this->iterator);
     }
 }
