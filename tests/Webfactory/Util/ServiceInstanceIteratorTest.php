@@ -46,26 +46,43 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    /**
+     * Ensures that the iterator is traversable.
+     */
     public function testIsTraversable()
     {
 
     }
 
+    /**
+     * Checks if the service with the listed ID is created.
+     */
     public function testIteratorCreatesServiceWithGivenId()
     {
 
     }
 
+    /**
+     * Ensures that services whose ID was not passed to the iterator are not created.
+     */
     public function testIteratorDoesNotCreateServicesWhoseIdIsNotListed()
     {
 
     }
 
+    /**
+     * Ensures that synthetic services are ignored during instantiation, even if
+     * their ID was passed to the iterator.
+     */
     public function testIteratorIgnoresSyntheticServicesEvenIfIdIsListed()
     {
 
     }
 
+    /**
+     * Ensures that an exception is thrown if service creation fails because of
+     * an invalid service definition.
+     */
     public function testIteratorThrowsExceptionIfItIsNotPossibleToCreateService()
     {
 
