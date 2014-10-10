@@ -3,7 +3,6 @@
 namespace Webfactory\Util;
 
 use Symfony\Component\HttpKernel\KernelInterface;
-use Traversable;
 
 /**
  * Allows iteration over service that are defined directly in the application.
