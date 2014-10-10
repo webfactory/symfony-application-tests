@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * External bundles (which are included from the vendor directory) are not included.
  */
-class ApplicationBundleReader implements \IteratorAggregate
+class ApplicationBundleIterator implements \IteratorAggregate
 {
     /**
      * The kernel whose bundles are filtered.

@@ -3,14 +3,14 @@
 namespace Webfactory\Util;
 
 /**
- * Tests the reader that determines application bundles.
+ * Tests the iterator that determines application bundles.
  */
-class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
+class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * System under test.
      *
-     * @var \Webfactory\Util\ApplicationBundleReader
+     * @var \Webfactory\Util\ApplicationBundleIterator
      */
     protected $reader = null;
 
@@ -20,7 +20,7 @@ class ApplicationBundleReaderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->reader = new ApplicationBundleReader(new \TestKernel('test', true));
+        $this->reader = new ApplicationBundleIterator(new \TestKernel('test', true));
     }
 
     /**
