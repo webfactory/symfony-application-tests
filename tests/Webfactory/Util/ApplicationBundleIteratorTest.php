@@ -12,7 +12,7 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
      *
      * @var \Webfactory\Util\ApplicationBundleIterator
      */
-    protected $reader = null;
+    protected $iterator = null;
 
     /**
      * Initializes the test environment.
@@ -20,7 +20,7 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->reader = new ApplicationBundleIterator(new \TestKernel('test', true));
+        $this->iterator = new ApplicationBundleIterator(new \TestKernel('test', true));
     }
 
     /**
@@ -28,7 +28,7 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->reader = null;
+        $this->iterator = null;
         parent::tearDown();
     }
 
@@ -37,7 +37,7 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderIsTraversable()
     {
-        $this->assertInstanceOf('Traversable', $this->reader);
+        $this->assertInstanceOf('Traversable', $this->iterator);
     }
 
     /**
@@ -45,7 +45,7 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testReaderIteratesOverBundles()
     {
-        $this->assertContainsOnly('\Symfony\Component\HttpKernel\Bundle\BundleInterface', $this->reader);
+        $this->assertContainsOnly('\Symfony\Component\HttpKernel\Bundle\BundleInterface', $this->iterator);
     }
 
     /**
@@ -76,6 +76,6 @@ class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function getBundleClassesFromReader()
     {
-        return array_map('get_class', iterator_to_array($this->reader));
+        return array_map('get_class', iterator_to_array($this->iterator));
     }
 }
