@@ -2,6 +2,8 @@
 
 namespace Webfactory\Util;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -22,6 +24,20 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class ApplicationServiceIterator implements \IteratorAggregate
 {
     /**
+     * The kernel of the application whose services are accepted.
+     *
+     * @var KernelInterface
+     */
+    protected $kernel = null;
+
+    /**
+     * The services IDs that will be checked.
+     *
+     * @var \Traversable
+     */
+    protected $possibleServiceIds = null;
+
+    /**
      * Creates the iterator.
      *
      * @param KernelInterface $applicationKernel
@@ -29,7 +45,8 @@ class ApplicationServiceIterator implements \IteratorAggregate
      */
     public function __construct(KernelInterface $applicationKernel, \Traversable $serviceIds)
     {
-
+        $this->kernel = $applicationKernel;
+        $this->possibleServiceIds = $serviceIds;
     }
 
     /**
@@ -40,6 +57,71 @@ class ApplicationServiceIterator implements \IteratorAggregate
      */
     public function getIterator()
     {
+        $serviceIdWhitelist     = $this->getIdsOfServicesThatAreDefinedInApplication();
+        $allowedServicePrefixes = $this->getPrefixesOfApplicationServices();
+        $applicationServices    = array();
+        foreach ($this->possibleServiceIds as $serviceId) {
+            /* @var $serviceId string */
+            if (in_array($serviceId, $serviceIdWhitelist)) {
+                $applicationServices[] = $serviceId;
+            } elseif ($this->startsWithPrefix($serviceId, $allowedServicePrefixes)) {
+                $applicationServices[] = $serviceId;
+            }
+        }
+        return new \ArrayIterator($applicationServices);
+    }
 
+    /**
+     * Returns all IDs of services that are clearly defined in the application bundles.
+     *
+     * @return string[]
+     */
+    protected function getIdsOfServicesThatAreDefinedInApplication()
+    {
+        $builder = new ContainerBuilder();
+        foreach (new ApplicationBundleIterator($this->kernel) as $bundle) {
+            /* @var $bundle BundleInterface */
+            $extension = $bundle->getContainerExtension();
+            if ($extension !== null) {
+                $extension->load(array(), $builder);
+            }
+        }
+        return $builder->getServiceIds();
+    }
+
+    /**
+     * Returns the prefixes that should be used by services that are defined in application bundles.
+     *
+     * @return string[]
+     */
+    protected function getPrefixesOfApplicationServices()
+    {
+        $prefixes = array();
+        foreach (new ApplicationBundleIterator($this->kernel) as $bundle) {
+            /* @var $bundle BundleInterface */
+            $extension = $bundle->getContainerExtension();
+            if ($extension !== null) {
+                $prefixes[] = $extension->getAlias() . '.';
+            }
+        }
+        return $prefixes;
+    }
+
+    /**
+     * Checks if the given service ID starts with any of the provided prefixes.
+     *
+     * @param string $serviceId
+     * @param string[] $allowedPrefixes
+     * @return boolean
+     */
+    protected function startsWithPrefix($serviceId, $allowedPrefixes)
+    {
+        foreach ($allowedPrefixes as $prefix) {
+            /* @var $prefix string */
+            if (strpos($serviceId, $prefix) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
