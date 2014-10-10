@@ -8,6 +8,37 @@ namespace Webfactory\Util;
 class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * System under test.
+     *
+     * @var ApplicationServiceIterator
+     */
+    protected $iterator = null;
+
+    /**
+     * Initializes the test environment.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $possibleServiceIds = new \ArrayIterator(array(
+            'annotation_reader', // defined in vendor bundle
+            'webfactory_test.form.contact_type', // defined in application bundle, follows convention
+            'does_not_follow_service_id_convention',
+            'webfactory_test.uses_prefix_but_not_defined_in_bundle'
+        ));
+        $this->iterator = new ApplicationServiceIterator(new \TestKernel('test', true), $possibleServiceIds);
+    }
+
+    /**
+     * Cleans up the test environment.
+     */
+    protected function tearDown()
+    {
+        $this->iterator = null;
+        parent::tearDown();
+    }
+
+    /**
      * Checks if the iterator is traversable.
      */
     public function testIsTraversable()
