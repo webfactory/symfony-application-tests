@@ -22,6 +22,11 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testProvidesServiceThatIsNotDefinedInExtensionButFollowsConvention()
+    {
+
+    }
+
     public function testSkipsServiceFromVendorBundle()
     {
 
