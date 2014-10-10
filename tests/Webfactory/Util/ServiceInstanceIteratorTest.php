@@ -104,6 +104,7 @@ class ServiceInstanceIteratorTest extends \PHPUnit_Framework_TestCase
         $definition->setFactoryMethod('create');
         $this->container->setDefinition('my.service', $definition);
 
+        $this->setExpectedException('Webfactory\Util\CannotInstantiateServiceException');
         iterator_to_array($this->iterator);
     }
 }
