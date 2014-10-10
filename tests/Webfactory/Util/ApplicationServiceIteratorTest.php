@@ -43,7 +43,7 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->iterator);
     }
 
     /**
@@ -52,7 +52,9 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesServiceThatIsDefinedInApplicationBundleButDoesNotFollowConvention()
     {
+        $serviceIds = iterator_to_array($this->iterator);
 
+        $this->assertContains('does_not_follow_service_id_convention', $serviceIds);
     }
 
     /**
@@ -61,7 +63,9 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesServiceThatIsDefinedInApplicationBundleAndFollowsConvention()
     {
+        $serviceIds = iterator_to_array($this->iterator);
 
+        $this->assertContains('webfactory_test.form.contact_type', $serviceIds);
     }
 
     /**
@@ -72,7 +76,9 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesServiceThatIsNotDefinedInExtensionButFollowsConvention()
     {
+        $serviceIds = iterator_to_array($this->iterator);
 
+        $this->assertContains('webfactory_test.uses_prefix_but_not_defined_in_bundle', $serviceIds);
     }
 
     /**
@@ -80,6 +86,8 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testSkipsServiceFromVendorBundle()
     {
+        $serviceIds = iterator_to_array($this->iterator);
 
+        $this->assertNotContains('annotation_reader', $serviceIds);
     }
 }
