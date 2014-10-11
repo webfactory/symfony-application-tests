@@ -12,7 +12,7 @@ class DataProviderIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->createIterator(array()));
     }
 
     /**
@@ -21,7 +21,13 @@ class DataProviderIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddsEntryIfDataSetIsEmpty()
     {
+        $iterator = $this->createIterator(array());
 
+        $data = iterator_to_array($iterator);
+        $expectedData = array(
+            array()
+        );
+        $this->assertEquals($expectedData, $data);
     }
 
     /**
@@ -29,6 +35,24 @@ class DataProviderIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testDoesNotChangeDataSetThatIsNotEmpty()
     {
+        $originalDataSet = array(
+            array(1, 2, 3),
+            array(5, 4, 9)
+        );
+        $iterator = $this->createIterator($originalDataSet);
 
+        $data = iterator_to_array($iterator);
+        $this->assertEquals($originalDataSet, $data);
+    }
+
+    /**
+     * Creates an iterator that used the given data set.
+     *
+     * @param array(array(mixed)) $dataSet
+     * @return DataProviderIterator
+     */
+    protected function createIterator(array $dataSet)
+    {
+        return new DataProviderIterator($dataSet);
     }
 }
