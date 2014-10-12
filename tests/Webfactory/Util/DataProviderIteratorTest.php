@@ -46,12 +46,27 @@ class DataProviderIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that the iterator works with a traversable object as argument.
+     */
+    public function testIteratorWorksWithTraversable()
+    {
+        $originalDataSet = array(
+            array(1, 2, 3),
+            array(5, 4, 9)
+        );
+        $iterator = $this->createIterator(new \IteratorIterator(new \ArrayIterator($originalDataSet)));
+
+        $data = iterator_to_array($iterator);
+        $this->assertEquals($originalDataSet, $data);
+    }
+
+    /**
      * Creates an iterator that used the given data set.
      *
-     * @param array(array(mixed)) $dataSet
+     * @param array(array(mixed))|\Traversable $dataSet
      * @return DataProviderIterator
      */
-    protected function createIterator(array $dataSet)
+    protected function createIterator($dataSet)
     {
         return new DataProviderIterator($dataSet);
     }

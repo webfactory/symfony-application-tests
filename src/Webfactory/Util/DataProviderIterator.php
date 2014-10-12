@@ -19,16 +19,16 @@ class DataProviderIterator implements \IteratorAggregate
     /**
      * The data set.
      *
-     * @var array(array(mixed))
+     * @var \Traversable
      */
     protected $dataSet = null;
 
     /**
      * Creates an iterator that allows to traverse the given data set.
      *
-     * @param array(array(mixed)) $dataSet
+     * @param array(array(mixed))|\Traversable $dataSet
      */
-    public function __construct(array $dataSet)
+    public function __construct($dataSet)
     {
         $this->dataSet = $dataSet;
     }
