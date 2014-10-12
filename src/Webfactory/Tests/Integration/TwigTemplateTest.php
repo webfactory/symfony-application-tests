@@ -7,6 +7,8 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Webfactory\Util\ApplicationBundleIterator;
+use Webfactory\Util\DataProviderArgumentIterator;
+use Webfactory\Util\DataProviderIterator;
 use Webfactory\Util\VendorResources;
 
 /**
@@ -46,10 +48,8 @@ class TwigTemplateTest extends AbstractContainerTestCase
     public function templateFileProvider()
     {
         $templateFiles = $this->getTemplateFiles();
-        $templateData  = array_map(function ($path) {
-            return array($path);
-        }, $templateFiles);
-        return $this->addFallbackEntryToProviderDataIfNecessary($templateData);
+        $templateData  = new DataProviderArgumentIterator($templateFiles);
+        return new DataProviderIterator($templateData);
     }
 
     /**

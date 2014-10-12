@@ -5,6 +5,8 @@ namespace Webfactory\Tests\Integration;
 use Doctrine\Common\Util\ClassUtils;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\Request;
+use Webfactory\Util\DataProviderArgumentIterator;
+use Webfactory\Util\DataProviderIterator;
 
 /**
  * Tests the @Secure annotations that are used in the application.
@@ -78,7 +80,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     /**
      * Provides a set of service methods and the Secure annotations that are assigned.
      *
-     * @return array(array(\ReflectionMethod|\JMS\SecurityExtraBundle\Annotation\Secure))
+     * @return \Traversable
      */
     public function secureAnnotationProvider()
     {
@@ -100,7 +102,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
                 $records[] = array($method, $annotation);
             }
         }
-        return $this->addFallbackEntryToProviderDataIfNecessary($records);
+        return new DataProviderIterator($records);
     }
 
     /**
@@ -145,7 +147,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     /**
      * Returns the class names of all controllers that are not defined as a service.
      *
-     * @return array(array(string))
+     * @return \Traversable
      */
     public function nonServiceControllerClassNameProvider()
     {
@@ -158,10 +160,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             $classes[] = $definition->class;
         }
         $classes = array_unique($classes);
-        $data    = array_map(function ($class) {
-            return array($class);
-        }, $classes);
-        return $this->addFallbackEntryToProviderDataIfNecessary($data);
+        $data    = new DataProviderArgumentIterator($classes);
+        return new DataProviderIterator($data);
     }
 
     /**
