@@ -30,7 +30,7 @@ class DataProviderIterator implements \IteratorAggregate
      */
     public function __construct($dataSet)
     {
-        $this->dataSet = $dataSet;
+        $this->dataSet = (is_array($dataSet)) ? new \ArrayIterator($dataSet) : $dataSet;
     }
 
     /**
@@ -41,9 +41,9 @@ class DataProviderIterator implements \IteratorAggregate
      */
     public function getIterator()
     {
-        if (count($this->dataSet) === 0) {
+        if (iterator_count($this->dataSet) === 0) {
             return new \ArrayIterator(array(array()));
         }
-        return new \ArrayIterator($this->dataSet);
+        return $this->dataSet;
     }
 }
