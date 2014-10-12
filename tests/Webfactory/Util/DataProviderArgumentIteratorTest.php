@@ -12,7 +12,7 @@ class DataProviderArgumentIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->createIterator(array()));
     }
 
     /**
@@ -21,7 +21,9 @@ class DataProviderArgumentIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorDoesNotChangeNumberOfEntries()
     {
+        $iterator = $this->createIterator(array(1, 2, 3));
 
+        $this->assertCount(3, $iterator);
     }
 
     /**
@@ -30,6 +32,41 @@ class DataProviderArgumentIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorConvertsOriginalEntriesToArgumentSets()
     {
+        $iterator = $this->createIterator(array(1, 2, 3));
 
+        $data = iterator_to_array($iterator);
+
+        $expectedData = array(
+            array(1),
+            array(2),
+            array(3)
+        );
+        $this->assertEquals($expectedData, $data);
+    }
+
+    /**
+     * Checks if the iterator works with a traversable object.
+     */
+    public function testIteratorWorksWithTraversableObject()
+    {
+        $iterator = $this->createIterator(new \ArrayIterator(array(1)));
+
+        $data = iterator_to_array($iterator);
+
+        $expectedData = array(
+            array(1)
+        );
+        $this->assertEquals($expectedData, $data);
+    }
+
+    /**
+     * Creates an iterator that uses the given inner data.
+     *
+     * @param array(mixed)|\Traversable $innerData
+     * @return DataProviderArgumentIterator
+     */
+    protected function createIterator($innerData)
+    {
+        return new DataProviderArgumentIterator($innerData);
     }
 }
