@@ -10,15 +10,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * External bundles (which are included from the vendor directory) are not included.
  */
-class ApplicationBundleIterator implements \IteratorAggregate
+class ApplicationBundleIterator extends \FilterIterator
 {
-    /**
-     * The kernel whose bundles are filtered.
-     *
-     * @var KernelInterface
-     */
-    protected $kernel = null;
-
     /**
      * Creates a reader that retrieves the bundles from the given kernel.
      *
@@ -26,22 +19,20 @@ class ApplicationBundleIterator implements \IteratorAggregate
      */
     public function __construct(KernelInterface $kernel)
     {
-        $this->kernel = $kernel;
+        $kernel->boot();
+        parent::__construct(new \ArrayIterator($kernel->getBundles()));
     }
 
     /**
-     * Returns the iterator.
+     * Checks if the current bundle is an application bundle.
      *
-     * @return \Traversable
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return boolean True if the current element is acceptable, otherwise false.
+     * @link http://php.net/manual/en/filteriterator.accept.php
      */
-    public function getIterator()
+    public function accept()
     {
-        $this->kernel->boot();
-        $bundles = $this->kernel->getBundles();
-        $applicationBundles = array_filter($bundles, function (BundleInterface $bundle) {
-            return !VendorResources::isVendorClass($bundle);
-        });
-        return new \ArrayIterator($applicationBundles);
+        /* @var $bundle BundleInterface */
+        $bundle = $this->current();
+        return !VendorResources::isVendorClass($bundle);
     }
 }
