@@ -20,13 +20,13 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $possibleServiceIds = new \ArrayIterator(array(
+        $possibleServiceIds = array(
             'annotation_reader', // defined in vendor bundle
             'webfactory_test.form.contact_type', // defined in application bundle, follows convention
             'does_not_follow_service_id_convention',
             'webfactory_test.uses_prefix_but_not_defined_in_bundle'
-        ));
-        $this->iterator = new ApplicationServiceIterator(new \TestKernel('test', true), $possibleServiceIds);
+        );
+        $this->iterator = $this->createIterator($possibleServiceIds);
     }
 
     /**
@@ -97,6 +97,53 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorWorksIfObjectsArePassedAsServiceIds()
     {
+        $possibleServiceIds = array(
+            $this->createServiceIdObject('webfactory_test.form.contact_type'),
+            $this->createServiceIdObject('does_not_follow_service_id_convention')
+        );
+        $this->iterator = $this->createIterator($possibleServiceIds);
 
+        $this->assertCount(2, $this->iterator);
+    }
+
+    /**
+     * Ensures that the iterator returns the original objects if the service IDs are
+     * provided as object
+     */
+    public function testIteratorReturnsServiceIdObjects()
+    {
+        $possibleServiceIds = array(
+            $this->createServiceIdObject('webfactory_test.form.contact_type'),
+            $this->createServiceIdObject('does_not_follow_service_id_convention')
+        );
+        $this->iterator = $this->createIterator($possibleServiceIds);
+
+        $this->assertContainsOnly('stdClass', $this->iterator);
+    }
+
+    /**
+     * Creates an object that returns the given service ID via __toString().
+     *
+     * @param string $serviceId
+     * @return object
+     */
+    protected function createServiceIdObject($serviceId)
+    {
+        $object = $this->getMock('stdClass', array('__toString'));
+        $object->expects($this->any())
+               ->method('__toString')
+               ->will($this->returnValue($serviceId));
+        return $object;
+    }
+
+    /**
+     * Creates an iterator that uses the given service IDs.
+     *
+     * @param array(string|object) $possibleServiceIds
+     * @return ApplicationServiceIterator
+     */
+    protected function createIterator(array $possibleServiceIds)
+    {
+        return new ApplicationServiceIterator(new \TestKernel('test', true), new \ArrayIterator($possibleServiceIds));
     }
 }
