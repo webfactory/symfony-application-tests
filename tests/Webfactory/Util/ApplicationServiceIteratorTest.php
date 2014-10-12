@@ -90,4 +90,13 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotContains('annotation_reader', $serviceIds);
     }
+
+    /**
+     * Checks if the iterator works even if objects are passed as service IDs (these
+     * objects must provide a __toString() method that returns the service ID).
+     */
+    public function testIteratorWorksIfObjectsArePassedAsServiceIds()
+    {
+
+    }
 }
