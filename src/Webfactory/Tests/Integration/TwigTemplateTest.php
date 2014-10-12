@@ -43,7 +43,7 @@ class TwigTemplateTest extends AbstractContainerTestCase
     /**
      * Provider that can be used by tests to retrieve the template file paths.
      *
-     * @return array(array(string))
+     * @return \Traversable
      */
     public function templateFileProvider()
     {
