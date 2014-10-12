@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * The iterator operates on a given list of service IDs and provides only the IDs of the services
  * that are defined in the application.
+ *
+ * Optionally, the service IDs can be provided as objects that provide a __toString() method.
  */
 class ApplicationServiceIterator implements \IteratorAggregate
 {
