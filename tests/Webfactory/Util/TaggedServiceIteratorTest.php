@@ -43,21 +43,35 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    /**
+     * Checks if the iterator is traversable.
+     */
     public function testIsTraversable()
     {
 
     }
 
+    /**
+     * Ensures that the iterator cn handle the case when no service is
+     * marked with the search tag.
+     */
     public function testProvidesEmptyListIfNoServiceIsTagged()
     {
 
     }
 
+    /**
+     * Checks if the iterator provides a list of services with the search tag.
+     */
     public function testProvidesListOfServicesWithTag()
     {
 
     }
 
+    /**
+     * Ensures that the iterator does not provide services that are marked with
+     * another tag.
+     */
     public function testDoesNotProvideServicesWithAnotherTag()
     {
 
