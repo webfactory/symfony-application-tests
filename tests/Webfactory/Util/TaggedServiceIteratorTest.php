@@ -61,6 +61,14 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Checks if the iterator provides TaggedService objects.
+     */
+    public function testProvidesTaggedServiceObjects()
+    {
+
+    }
+
+    /**
      * Checks if the iterator provides a list of services with the search tag.
      */
     public function testProvidesListOfServicesWithTag()
@@ -73,6 +81,17 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      * another tag.
      */
     public function testDoesNotProvideServicesWithAnotherTag()
+    {
+
+    }
+
+    /**
+     * Adds a tagged service to the container.
+     *
+     * @param string $serviceId
+     * @param string $tag
+     */
+    protected function addService($serviceId, $tag)
     {
 
     }
