@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * Optionally, the service IDs can be provided as objects that provide a __toString() method.
  */
-class ApplicationServiceIterator implements \IteratorAggregate
+class ApplicationServiceIterator extends \FilterIterator
 {
     /**
      * The kernel of the application whose services are accepted.
@@ -33,11 +33,18 @@ class ApplicationServiceIterator implements \IteratorAggregate
     protected $kernel = null;
 
     /**
-     * The services IDs that will be checked.
+     * IDs of services that are defined by the application.
      *
-     * @var \Traversable
+     * @var array(string)|null
      */
-    protected $possibleServiceIds = null;
+    protected $serviceIdWhitelist = null;
+
+    /**
+     * List of service prefixes that belong to the application.
+     *
+     * @var array(string)|null
+     */
+    protected $allowedServicePrefixes = null;
 
     /**
      * Creates the iterator.
@@ -48,29 +55,36 @@ class ApplicationServiceIterator implements \IteratorAggregate
     public function __construct(KernelInterface $applicationKernel, \Traversable $serviceIds)
     {
         $this->kernel = $applicationKernel;
-        $this->possibleServiceIds = $serviceIds;
+        parent::__construct(new \IteratorIterator($serviceIds));
     }
 
     /**
-     * Returns the iterator.
-     *
-     * @return \Traversable
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * Initializes the iterator.
      */
-    public function getIterator()
+    public function rewind()
     {
-        $serviceIdWhitelist     = $this->getIdsOfServicesThatAreDefinedInApplication();
-        $allowedServicePrefixes = $this->getPrefixesOfApplicationServices();
-        $applicationServices    = array();
-        foreach ($this->possibleServiceIds as $serviceId) {
-            /* @var $serviceId string */
-            if (in_array($serviceId, $serviceIdWhitelist)) {
-                $applicationServices[] = $serviceId;
-            } elseif ($this->startsWithPrefix($serviceId, $allowedServicePrefixes)) {
-                $applicationServices[] = $serviceId;
-            }
+        $this->serviceIdWhitelist     = $this->getIdsOfServicesThatAreDefinedInApplication();
+        $this->allowedServicePrefixes = $this->getPrefixesOfApplicationServices();
+        parent::rewind();
+    }
+
+    /**
+     * Checks if the current service ID is defined directly in the application.
+     *
+     * @return boolean True if the current element is acceptable, otherwise false.
+     * @link http://php.net/manual/en/filteriterator.accept.php
+     */
+    public function accept()
+    {
+        /* @var $serviceId string|object */
+        $serviceId = $this->current();
+        if (in_array($serviceId, $this->serviceIdWhitelist)) {
+            return true;
         }
-        return new \ArrayIterator($applicationServices);
+        if ($this->startsWithPrefix($serviceId, $this->allowedServicePrefixes)) {
+            return true;
+        }
+        return false;
     }
 
     /**
