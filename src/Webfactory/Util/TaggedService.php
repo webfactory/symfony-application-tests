@@ -12,6 +12,22 @@ namespace Webfactory\Util;
 class TaggedService
 {
     /**
+     * The ID of the service.
+     *
+     * @var string
+     */
+    protected $serviceId = null;
+
+    /**
+     * Definition of the tag.
+     *
+     * Contains all meta data that was added to the tag.
+     *
+     * @var array(string=>string)
+     */
+    protected $tagDefinition = null;
+
+    /**
      * Creates an object with information about a tagged service.
      *
      * @param string $serviceId
@@ -19,7 +35,8 @@ class TaggedService
      */
     public function __construct($serviceId, array $tagDefinition)
     {
-
+        $this->serviceId     = $serviceId;
+        $this->tagDefinition = $tagDefinition;
     }
 
     /**
@@ -29,7 +46,7 @@ class TaggedService
      */
     public function getServiceId()
     {
-
+        return $this->serviceId;
     }
 
     /**
@@ -39,7 +56,7 @@ class TaggedService
      */
     public function getTagDefinition()
     {
-
+        return $this->tagDefinition;
     }
 
     /**
@@ -52,6 +69,6 @@ class TaggedService
      */
     public function __toString()
     {
-
+        return $this->getServiceId();
     }
 }
