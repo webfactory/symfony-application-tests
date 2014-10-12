@@ -60,16 +60,6 @@ class ApplicationServiceIterator extends \FilterIterator
     }
 
     /**
-     * Initializes the iterator.
-     */
-    public function rewind()
-    {
-        $this->serviceIdWhitelist     = $this->getIdsOfServicesThatAreDefinedInApplication();
-        $this->allowedServicePrefixes = $this->getPrefixesOfApplicationServices();
-        parent::rewind();
-    }
-
-    /**
      * Checks if the current service ID is defined directly in the application.
      *
      * @return boolean True if the current element is acceptable, otherwise false.
@@ -79,10 +69,10 @@ class ApplicationServiceIterator extends \FilterIterator
     {
         /* @var $serviceId string|object */
         $serviceId = $this->current();
-        if (in_array($serviceId, $this->serviceIdWhitelist)) {
+        if (in_array($serviceId, $this->getIdsOfServicesThatAreDefinedInApplication())) {
             return true;
         }
-        if ($this->startsWithPrefix($serviceId, $this->allowedServicePrefixes)) {
+        if ($this->startsWithPrefix($serviceId, $this->getPrefixesOfApplicationServices())) {
             return true;
         }
         return false;
@@ -95,11 +85,14 @@ class ApplicationServiceIterator extends \FilterIterator
      */
     protected function getIdsOfServicesThatAreDefinedInApplication()
     {
-        $builder = new ContainerBuilder();
-        $this->applyToExtensions(function (ExtensionInterface $extension) use ($builder) {
-            $extension->load(array(), $builder);
-        });
-        return $builder->getServiceIds();
+        if ($this->serviceIdWhitelist === null) {
+            $builder = new ContainerBuilder();
+            $this->applyToExtensions(function (ExtensionInterface $extension) use ($builder) {
+                $extension->load(array(), $builder);
+            });
+            $this->serviceIdWhitelist = $builder->getServiceIds();
+        }
+        return $this->serviceIdWhitelist;
     }
 
     /**
@@ -109,10 +102,12 @@ class ApplicationServiceIterator extends \FilterIterator
      */
     protected function getPrefixesOfApplicationServices()
     {
-        $prefixes = $this->applyToExtensions(function (ExtensionInterface $extension) {
-            return $extension->getAlias() . '.';
-        });
-        return $prefixes;
+        if ($this->allowedServicePrefixes === null) {
+            $this->allowedServicePrefixes = $this->applyToExtensions(function (ExtensionInterface $extension) {
+                return $extension->getAlias() . '.';
+            });
+        }
+        return $this->allowedServicePrefixes;
     }
 
     /**
