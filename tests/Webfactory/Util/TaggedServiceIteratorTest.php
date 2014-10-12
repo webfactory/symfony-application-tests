@@ -3,6 +3,7 @@
 namespace Webfactory\Util;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests the iterator for tagged services.
@@ -48,7 +49,7 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->iterator);
     }
 
     /**
@@ -57,7 +58,7 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesEmptyListIfNoServiceIsTagged()
     {
-
+        $this->assertCount(0, $this->iterator);
     }
 
     /**
@@ -65,7 +66,9 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesTaggedServiceObjects()
     {
+        $this->addService('my.service', 'test.tag');
 
+        $this->assertContainsOnly('Webfactory\Util\TaggedService', $this->iterator);
     }
 
     /**
@@ -73,7 +76,10 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidesListOfServicesWithTag()
     {
+        $this->addService('my.service', 'test.tag');
+        $this->addService('another.service', 'test.tag');
 
+        $this->assertCount(2, $this->iterator);
     }
 
     /**
@@ -82,7 +88,9 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testDoesNotProvideServicesWithAnotherTag()
     {
+        $this->addService('my.service', 'another.tag');
 
+        $this->assertCount(0, $this->iterator);
     }
 
     /**
@@ -93,6 +101,8 @@ class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function addService($serviceId, $tag)
     {
-
+        $definition = new Definition('stdClass');
+        $definition->addTag($tag, array('alias' => 'test'));
+        $this->container->setDefinition($serviceId, $definition);
     }
 }
