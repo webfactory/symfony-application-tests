@@ -2,6 +2,9 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Webfactory\Util\ServiceCreator;
+use Webfactory\Util\TaggedService;
+
 /**
  * Checks if form types are configured correctly.
  */
@@ -12,38 +15,40 @@ class FormTypeTest extends AbstractContainerTestCase
      *
      * Form types cannot be used if this is not the case.
      *
-     * @param string|null $id The ID of the type service.
-     * @param \Symfony\Component\Form\FormTypeInterface|mixed $type The type service from the container.
-     * @param array(string=>string) $tagDefinition The tag definition that is assigned to the type.
+     * @param TaggedService|null $service
      * @dataProvider getFormTypes
      */
-    public function testFormTypeAliasAndNameAreEqual($id = null, $type = null, array $tagDefinition = array())
+    public function testFormTypeAliasAndNameAreEqual(TaggedService $service = null)
     {
-        if ($id === null && $type === null) {
+        if ($service === null) {
             $this->markTestSkipped('No form types registered, nothing to test.');
         }
-        $message = 'An alias must be defined for form type "%s".';
-        $message = sprintf($message, $id);
-        $this->assertArrayHasKey('alias', $tagDefinition, $message);
 
+        $creator = new ServiceCreator($this->getContainer());
         /* @var $type \Symfony\Component\Form\FormTypeInterface */
+        $type = $creator->create($service->getServiceId());
         $message = 'Service "%s" is tagged as form type, but it does not implement the required interface.';
-        $message = sprintf($message, $id);
+        $message = sprintf($message, $service->getServiceId());
         $this->assertInstanceOf('\Symfony\Component\Form\FormTypeInterface', $type, $message);
+
+        $tagDefinition = $service->getTagDefinition();
+        $message = 'An alias must be defined for form type "%s".';
+        $message = sprintf($message, $service->getServiceId());
+        $this->assertArrayHasKey('alias', $service->getTagDefinition(), $message);
 
         $message = 'Form type name and assigned alias must match, but service "%s" '
                  . 'uses "%s" as name and "%s" as alias.';
-        $message = sprintf($message, $id, $type->getName(), $tagDefinition['alias']);
+        $message = sprintf($message, $service->getServiceId(), $type->getName(), $tagDefinition['alias']);
         $this->assertEquals($type->getName(), $tagDefinition['alias'], $message);
     }
 
     /**
      * Returns record sets of form types and their corresponding aliases.
      *
-     * @return array(array(string|object|null|array))
+     * @return \Traversable
      */
     public function getFormTypes()
     {
-        return $this->getTaggedServices('form.type', array('Symfony'));
+        return $this->getTaggedServices('form.type');
     }
 }
