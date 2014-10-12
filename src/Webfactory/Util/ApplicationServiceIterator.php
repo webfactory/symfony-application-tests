@@ -3,6 +3,7 @@
 namespace Webfactory\Util;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -95,13 +96,9 @@ class ApplicationServiceIterator extends \FilterIterator
     protected function getIdsOfServicesThatAreDefinedInApplication()
     {
         $builder = new ContainerBuilder();
-        foreach (new ApplicationBundleIterator($this->kernel) as $bundle) {
-            /* @var $bundle BundleInterface */
-            $extension = $bundle->getContainerExtension();
-            if ($extension !== null) {
-                $extension->load(array(), $builder);
-            }
-        }
+        $this->applyToExtensions(function (ExtensionInterface $extension) use ($builder) {
+            $extension->load(array(), $builder);
+        });
         return $builder->getServiceIds();
     }
 
@@ -112,15 +109,31 @@ class ApplicationServiceIterator extends \FilterIterator
      */
     protected function getPrefixesOfApplicationServices()
     {
-        $prefixes = array();
+        $prefixes = $this->applyToExtensions(function (ExtensionInterface $extension) {
+            return $extension->getAlias() . '.';
+        });
+        return $prefixes;
+    }
+
+    /**
+     * Applies the given callback to all bundle extensions that are
+     * defined in the application and returns an array with the results
+     * of each call.
+     *
+     * @param callable $callback
+     * @return array(mixed)
+     */
+    protected function applyToExtensions($callback)
+    {
+        $results = array();
         foreach (new ApplicationBundleIterator($this->kernel) as $bundle) {
             /* @var $bundle BundleInterface */
             $extension = $bundle->getContainerExtension();
             if ($extension !== null) {
-                $prefixes[] = $extension->getAlias() . '.';
+                $results[] = call_user_func($callback, $extension);
             }
         }
-        return $prefixes;
+        return $results;
     }
 
     /**
