@@ -4,10 +4,15 @@ namespace Webfactory\Tests\Integration;
 
 use Doctrine\Common\Util\ClassUtils;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 use Webfactory\Util\DataProviderArgumentIterator;
 use Webfactory\Util\DataProviderIterator;
+use Webfactory\Util\VendorResources;
 
 /**
  * Tests the @Secure annotations that are used in the application.
@@ -183,9 +188,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
         }
         /* @var $router RouterInterface */
         $router      = $this->getContainer()->get('router');
-        $routes      = $router->getRouteCollection()->all();
         $definitions = array();
-        foreach ($routes as $route) {
+        foreach ($this->getApplicationRoutes($router) as $route) {
             /* @var $route \Symfony\Component\Routing\Route */
             $assignedController = $route->getDefault('_controller');
             if ($assignedController === null) {
@@ -207,6 +211,32 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             $definitions[] = $definition;
         }
         return $definitions;
+    }
+
+    /**
+     * Returns routes that are defined directly in the application.
+     *
+     * Routes from vendor bundles are not considered.
+     *
+     * @param RouterInterface $router
+     * @return Route[]
+     */
+    protected function getApplicationRoutes(RouterInterface $router)
+    {
+        $applicationRoutes = clone $router->getRouteCollection();
+        $resources = $router->getRouteCollection()->getResources();
+        foreach ($resources as $resource) {
+            /* @var $resource ResourceInterface */
+            if (!VendorResources::isVendorFile((string)$resource)) {
+                continue;
+            }
+            /* @var $loader LoaderInterface */
+            $loader = $this->getContainer()->get('routing.loader');
+            /* @var $vendorRoutes RouteCollection */
+            $vendorRoutes = $loader->load((string)$resource);
+            $applicationRoutes->remove(array_keys($vendorRoutes->all()));
+        }
+        return $applicationRoutes->all();
     }
 
     /**
