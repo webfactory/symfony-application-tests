@@ -119,7 +119,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             if ($definition->getClass() === null) {
                 continue;
             }
-            $classes[] = $class = $builder->getParameterBag()->resolveValue($definition->getClass());
+            $classes[] = $builder->getParameterBag()->resolveValue($definition->getClass());
         }
         return array_unique($classes);
     }
