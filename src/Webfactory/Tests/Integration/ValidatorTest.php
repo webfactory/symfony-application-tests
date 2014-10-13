@@ -2,6 +2,9 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Webfactory\Util\ServiceCreator;
+use Webfactory\Util\TaggedService;
+
 /**
  * Tests the registered validators.
  */
@@ -11,35 +14,36 @@ class ValidatorTest extends AbstractContainerTestCase
      * Checks if the validators that are configured in the container implement
      * the correct interface.
      *
-     * @param string $id
-     * @param \Symfony\Component\Validator\ConstraintValidatorInterface|mixed $validator
-     * @param array(string=>string) $tagDefinition
+     * @param TaggedService $service
      * @dataProvider getValidators
      */
-    public function testRegisteredValidatorsImplementCorrectInterface(
-        $id = null,
-        $validator = null,
-        array $tagDefinition = array()
-    ) {
-        if ($id === null && $validator === null) {
+    public function testRegisteredValidatorsImplementCorrectInterface(TaggedService $service = null)
+    {
+        if ($service === null) {
             $this->markTestSkipped('No validators registered, nothing to test.');
         }
+
+        $creator = new ServiceCreator($this->getContainer());
+        /* @var $validator \Symfony\Component\Validator\ConstraintValidatorInterface */
+        $validator = $creator->create($service->getServiceId());
+
         $message = 'Service "%s" is tagged as validator, but it does not implement the required interface.';
-        $message = sprintf($message, $id);
+        $message = sprintf($message, $service->getServiceId());
         $this->assertInstanceOf('\Symfony\Component\Validator\ConstraintValidatorInterface', $validator, $message);
 
+        $tagDefinition = $service->getTagDefinition();
         $message = 'An alias must be defined for validation service "%s".';
-        $message = sprintf($message, $id);
+        $message = sprintf($message, $service->getServiceId());
         $this->assertArrayHasKey('alias', $tagDefinition, $message);
     }
 
     /**
      * Returns services that are tagged as validators.
      *
-     * @return array(array(string|object|null|array))
+     * @return \Traversable
      */
     public function getValidators()
     {
-        return $this->getTaggedServices('validator.constraint_validator', array('Symfony'));
+        return $this->getTaggedServices('validator.constraint_validator');
     }
 }

@@ -23,3 +23,6 @@ services:
     webfactory_test.advanced.depending_on_synthetic_service:
         class: ArrayObject
         arguments: [[@webfactory_test.advanced.synthetic_service]]
+
+    does_not_follow_service_id_convention:
+        class: stdClass

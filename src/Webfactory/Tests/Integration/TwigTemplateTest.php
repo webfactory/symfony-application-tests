@@ -5,6 +5,11 @@ namespace Webfactory\Tests\Integration;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Webfactory\Util\ApplicationBundleIterator;
+use Webfactory\Util\DataProviderArgumentIterator;
+use Webfactory\Util\DataProviderIterator;
+use Webfactory\Util\VendorResources;
 
 /**
  * Checks the Twig templates in the project.
@@ -38,15 +43,13 @@ class TwigTemplateTest extends AbstractContainerTestCase
     /**
      * Provider that can be used by tests to retrieve the template file paths.
      *
-     * @return array(array(string))
+     * @return \Traversable
      */
     public function templateFileProvider()
     {
         $templateFiles = $this->getTemplateFiles();
-        $templateData  = array_map(function ($path) {
-            return array($path);
-        }, $templateFiles);
-        return $this->addFallbackEntryToProviderDataIfNecessary($templateData);
+        $templateData  = new DataProviderArgumentIterator($templateFiles);
+        return new DataProviderIterator($templateData);
     }
 
     /**
@@ -68,19 +71,20 @@ class TwigTemplateTest extends AbstractContainerTestCase
     }
 
     /**
-     * Returns the paths to the template files in this project.
+     * Returns the paths to the template files in this application.
      *
      * @return array(string)
      */
     protected function getTemplateFiles()
     {
-        $kernel = static::createClient()->getKernel();
+        $kernel = $this->getKernel();
         $viewDirectories = array();
         $globalResourceDirectory = $kernel->getRootDir() . '/Resources';
         if (is_dir($globalResourceDirectory)) {
             $viewDirectories[] = $globalResourceDirectory;
         }
-        foreach ($kernel->getBundles() as $bundle) {
+        foreach (new ApplicationBundleIterator($kernel) as $bundle) {
+            /* @var $bundle BundleInterface */
             $viewDirectory = $bundle->getPath() . '/Resources/views';
             if (is_dir($viewDirectory)) {
                 $viewDirectories[] = $viewDirectory;
@@ -104,31 +108,9 @@ class TwigTemplateTest extends AbstractContainerTestCase
      */
     protected function createFinder()
     {
-        $vendorDirectory = $this->getVendorDirectory();
-        $finder = Finder::create()->filter(function (SplFileInfo $file) use ($vendorDirectory) {
-            // The file path must not start with the vendor directory.
-            return strpos($file->getPathname(), $vendorDirectory) !== 0;
+        $finder = Finder::create()->filter(function (SplFileInfo $file) {
+            return !VendorResources::isVendorFile($file);
         });
         return $finder;
-    }
-
-    /**
-     * Returns the path to the vendor directory.
-     *
-     * The implementation uses the file path of Composer's class loader to
-     * determine the vendor directory.
-     * This avoids problems, when the name of the vendor directory is changed.
-     *
-     * To make things more complex, it is even possible to change the vendor directory
-     * by passing environment variables during "composer install" or "composer update".
-     * In that case, the name of the vendor directory does not even appear in the composer.json.
-     *
-     * @return string
-     */
-    protected function getVendorDirectory()
-    {
-        $reflection = new \ReflectionClass('\Composer\Autoload\ClassLoader');
-        $classLoaderFilePath = $reflection->getFileName();
-        return dirname(dirname($classLoaderFilePath));
     }
 }

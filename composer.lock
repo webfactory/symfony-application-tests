@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f803fefb4245ba6ffc68142670223255",
+    "hash": "b514701124eb0f76986fb165191b5000",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3858,6 +3858,62 @@
             "description": "Symfony TwigBundle",
             "homepage": "http://symfony.com",
             "time": "2014-08-26 20:24:52"
+        },
+        {
+            "name": "symfony/web-profiler-bundle",
+            "version": "v2.5.5",
+            "target-dir": "Symfony/Bundle/WebProfilerBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/WebProfilerBundle.git",
+                "reference": "f7d678aae2fb1112a498c50f8fad8d3f5dfffd72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/WebProfilerBundle/zipball/f7d678aae2fb1112a498c50f8fad8d3f5dfffd72",
+                "reference": "f7d678aae2fb1112a498c50f8fad8d3f5dfffd72",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/http-kernel": "~2.3",
+                "symfony/routing": "~2.2",
+                "symfony/twig-bridge": "~2.2"
+            },
+            "require-dev": {
+                "symfony/config": "~2.2",
+                "symfony/console": "~2.3",
+                "symfony/dependency-injection": "~2.0",
+                "symfony/stopwatch": "~2.2"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Bundle\\WebProfilerBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony WebProfilerBundle",
+            "homepage": "http://symfony.com",
+            "time": "2014-09-25 09:52:29"
         },
         {
             "name": "theseer/fdomdocument",

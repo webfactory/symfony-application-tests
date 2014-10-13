@@ -4,7 +4,15 @@ namespace Webfactory\Tests\Integration;
 
 use Doctrine\Common\Util\ClassUtils;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouterInterface;
+use Webfactory\Util\DataProviderArgumentIterator;
+use Webfactory\Util\DataProviderIterator;
+use Webfactory\Util\VendorResources;
 
 /**
  * Tests the @Secure annotations that are used in the application.
@@ -78,7 +86,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     /**
      * Provides a set of service methods and the Secure annotations that are assigned.
      *
-     * @return array(array(\ReflectionMethod|\JMS\SecurityExtraBundle\Annotation\Secure))
+     * @return \Traversable
      */
     public function secureAnnotationProvider()
     {
@@ -100,7 +108,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
                 $records[] = array($method, $annotation);
             }
         }
-        return $this->addFallbackEntryToProviderDataIfNecessary($records);
+        return new DataProviderIterator($records);
     }
 
     /**
@@ -117,7 +125,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             if ($definition->getClass() === null) {
                 continue;
             }
-            $classes[] = $class = $builder->getParameterBag()->resolveValue($definition->getClass());
+            $classes[] = $builder->getParameterBag()->resolveValue($definition->getClass());
         }
         return array_unique($classes);
     }
@@ -145,7 +153,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     /**
      * Returns the class names of all controllers that are not defined as a service.
      *
-     * @return array(array(string))
+     * @return \Traversable
      */
     public function nonServiceControllerClassNameProvider()
     {
@@ -158,10 +166,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             $classes[] = $definition->class;
         }
         $classes = array_unique($classes);
-        $data    = array_map(function ($class) {
-            return array($class);
-        }, $classes);
-        return $this->addFallbackEntryToProviderDataIfNecessary($data);
+        $data    = new DataProviderArgumentIterator($classes);
+        return new DataProviderIterator($data);
     }
 
     /**
@@ -180,17 +186,14 @@ class SecureAnnotationTest extends AbstractContainerTestCase
         if (!$this->getContainer()->has('router')) {
             return array();
         }
-        $routes      = $this->getContainer()->get('router')->getRouteCollection()->all();
+        /* @var $router RouterInterface */
+        $router      = $this->getContainer()->get('router');
         $definitions = array();
-        foreach ($routes as $route) {
+        foreach ($this->getApplicationRoutes($router) as $route) {
             /* @var $route \Symfony\Component\Routing\Route */
             $assignedController = $route->getDefault('_controller');
             if ($assignedController === null) {
                 // No controller is assigned to this route.
-                continue;
-            }
-            if (strpos($assignedController, 'assetic.') === 0) {
-                // Ignore Assetic controllers.
                 continue;
             }
             $controller = $this->createController($assignedController);
@@ -207,6 +210,32 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     }
 
     /**
+     * Returns routes that are defined directly in the application.
+     *
+     * Routes from vendor bundles are not considered.
+     *
+     * @param RouterInterface $router
+     * @return Route[]
+     */
+    protected function getApplicationRoutes(RouterInterface $router)
+    {
+        $applicationRoutes = clone $router->getRouteCollection();
+        $resources = $router->getRouteCollection()->getResources();
+        foreach ($resources as $resource) {
+            /* @var $resource ResourceInterface */
+            if (!VendorResources::isVendorFile((string)$resource)) {
+                continue;
+            }
+            /* @var $loader LoaderInterface */
+            $loader = $this->getContainer()->get('routing.loader');
+            /* @var $vendorRoutes RouteCollection */
+            $vendorRoutes = $loader->load((string)$resource);
+            $applicationRoutes->remove(array_keys($vendorRoutes->all()));
+        }
+        return $applicationRoutes->all();
+    }
+
+    /**
      * Uses the provided controller to determine the original controller class name.
      *
      * Controllers might be encapsulated by proxies, which requires a special treatment.
@@ -220,7 +249,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     }
 
     /**
-     * Uses the route reference to create an controller object.
+     * Uses the route reference to create a controller object.
      *
      * @param mixed $reference The controller reference from a route.
      * @return object|null

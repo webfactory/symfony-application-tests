@@ -4,9 +4,12 @@ namespace Webfactory\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Webfactory\Util\ApplicationServiceIterator;
+use Webfactory\Util\DataProviderArgumentIterator;
+use Webfactory\Util\DataProviderIterator;
+use Webfactory\Util\TaggedServiceIterator;
 
 /**
  * Base class for integration test cases.
@@ -15,6 +18,24 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
  */
 abstract class AbstractContainerTestCase extends WebTestCase
 {
+    /**
+     * Test client or null if it was not created yet.
+     *
+     * Use getClient() to retrieve a client instance.
+     *
+     * @var \Symfony\Bundle\FrameworkBundle\Client|null
+     */
+    protected $client = null;
+
+    /**
+     * Cleans up the test environment.
+     */
+    protected function tearDown()
+    {
+        $this->client = null;
+        parent::tearDown();
+    }
+
     /**
      * Returns the annotation reader that is used by the application.
      *
@@ -32,7 +53,7 @@ abstract class AbstractContainerTestCase extends WebTestCase
      */
     protected function getContainer()
     {
-        $container = static::createClient()->getContainer();
+        $container = $this->getClient()->getContainer();
         $message   = 'We need a container instance to inspect the services; '
                    . 'a class that implements the ContainerInterface is not enough.';
         $this->assertInstanceOf('\Symfony\Component\DependencyInjection\Container', $container, $message);
@@ -63,41 +84,44 @@ abstract class AbstractContainerTestCase extends WebTestCase
      * Returns tagged (custom) services from the service container.
      *
      * The result contains one array for each tag definition.
-     * Each array contains the service ID as first, the service
-     * as second and the tag definition as third item.
+     * Tests that use it as data provider retrieve a TaggedService object as argument.
      *
      * @param string $tag
-     * @param array(string) $namespacesToSkip A list of namespace prefixes that will be skipped.
-     * @return array(array(object|null|string|array(string=>string)))
+     * @return \Traversable
      */
-    protected function getTaggedServices($tag, array $namespacesToSkip = array())
+    protected function getTaggedServices($tag)
     {
-        $container = $this->getContainerBuilder();
-        $tagsById  = $container->findTaggedServiceIds($tag);
-        $servicesAndDefinitions = array();
-        foreach ($tagsById as $id => $tagDefinitions) {
-            /* @var $id string */
-            /* @var $tagDefinitions array(array(string=>string)) */
-            if ($container->has($id)) {
-                $class = $container->findDefinition($id)->getClass();
-                foreach ($namespacesToSkip as $namespacePrefix) {
-                    /* @var $namespacePrefix string */
-                    if (strpos($class, $namespacePrefix) === 0) {
-                        // Skip types that are defined in ignored namespaces.
-                        continue 2;
-                    }
-                }
-            }
-            foreach ($tagDefinitions as $tagDefinition) {
-                /* @var $tagDefinition array(string=>string) */
-                $servicesAndDefinitions[] = array(
-                    $id,
-                    $container->get($id, Container::NULL_ON_INVALID_REFERENCE),
-                    $tagDefinition
-                );
-            }
+        $container           = $this->getContainerBuilder();
+        $taggedServices      = new TaggedServiceIterator($container, $tag);
+        $applicationServices = new ApplicationServiceIterator($this->getKernel(), $taggedServices);
+        $dataSets            = new DataProviderIterator(new DataProviderArgumentIterator($applicationServices));
+        return $dataSets;
+    }
+
+    /**
+     * Returns a test client.
+     *
+     * This client is created once per test and can be used to retrieve the
+     * container or the kernel.
+     *
+     * @return \Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function getClient()
+    {
+        if ($this->client === null) {
+            $this->client = static::createClient();
         }
-        return $this->addFallbackEntryToProviderDataIfNecessary($servicesAndDefinitions);
+        return $this->client;
+    }
+
+    /**
+     * Returns the kernel that is used in the tests.
+     *
+     * @return \Symfony\Component\HttpKernel\KernelInterface
+     */
+    protected function getKernel()
+    {
+        return $this->getClient()->getKernel();
     }
 
     /**
@@ -122,25 +146,5 @@ abstract class AbstractContainerTestCase extends WebTestCase
             return $_SERVER['KERNEL_CLASS'];
         }
         return parent::getKernelClass();
-    }
-
-    /**
-     * If necessary, adds null entry to a list of method arguments, which were returned by a data provider.
-     *
-     * If a data provider returns an empty array, then the test fails. Therefore, this method adds an
-     * entry if no data was gathered by a provider.
-     * This entry does not provide any argument, so the test that works with the data should use
-     * only optional parameters and handle that special case (for example by skipping the test).
-     *
-     * @param array(array(mixed)) $providerData
-     * @return array(array(mixed))
-     * @see https://phpunit.de/manual/3.9/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.data-providers
-     */
-    protected function addFallbackEntryToProviderDataIfNecessary(array $providerData)
-    {
-        if (count($providerData) === 0) {
-            return array(array());
-        }
-        return $providerData;
     }
 }

@@ -12,3 +12,6 @@ framework:
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
     templating: { engines: ['twig'] }
 
+services:
+    webfactory_test.uses_prefix_but_not_defined_in_bundle:
+        class: stdClass
