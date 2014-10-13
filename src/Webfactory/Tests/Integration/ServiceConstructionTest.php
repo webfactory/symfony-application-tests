@@ -2,8 +2,9 @@
 
 namespace Webfactory\Tests\Integration;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Webfactory\Util\ApplicationServiceIterator;
+use Webfactory\Util\CannotInstantiateServiceException;
+use Webfactory\Util\ServiceCreator;
 
 /**
  * Checks if it is possible to instantiate the configured services.
@@ -16,36 +17,20 @@ class ServiceConstructionTest extends AbstractContainerTestCase
     public function testServicesCanBeInstantiated()
     {
         $container = $this->getContainer();
-
-        $message = '';
-        foreach ($container->getServiceIds() as $id) {
+        $errors    = array();
+        $creator   = new ServiceCreator($container);
+        $services  = new ApplicationServiceIterator(
+            $this->getKernel(),
+            new \ArrayIterator($container->getServiceIds())
+        );
+        foreach ($services as $id) {
             /* @var $id string */
             try {
-                $container->get($id, Container::NULL_ON_INVALID_REFERENCE);
-            } catch (\Exception $e) {
-                if ($this->isCausedBySyntheticServiceRequest($e)) {
-                    // Skip services that are or that depend on synthetic services. It is simply not
-                    // possible to create them in a reliable way.
-                    continue;
-                }
-                $message .= 'Cannot create service "' . $id . '":' . PHP_EOL;
-                $message .= $e . PHP_EOL . PHP_EOL;
+                $creator->create($id);
+            } catch (CannotInstantiateServiceException $e) {
+                $errors[] = $e;
             }
         }
-        $this->assertTrue(strlen($message) === 0, $message);
-    }
-
-    /**
-     * Checks if a request for a synthetic service caused the provided exception.
-     *
-     * @param \Exception $exception
-     * @return boolean
-     */
-    protected function isCausedBySyntheticServiceRequest($exception)
-    {
-        if (!($exception instanceof RuntimeException)) {
-            return false;
-        }
-        return strpos($exception->getMessage(), 'requested a synthetic service') !== false;
+        $this->assertCount(0, $errors, implode(PHP_EOL . PHP_EOL, $errors));
     }
 }
