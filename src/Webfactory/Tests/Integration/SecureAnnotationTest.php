@@ -5,6 +5,7 @@ namespace Webfactory\Tests\Integration;
 use Doctrine\Common\Util\ClassUtils;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 use Webfactory\Util\DataProviderArgumentIterator;
 use Webfactory\Util\DataProviderIterator;
 
@@ -180,7 +181,9 @@ class SecureAnnotationTest extends AbstractContainerTestCase
         if (!$this->getContainer()->has('router')) {
             return array();
         }
-        $routes      = $this->getContainer()->get('router')->getRouteCollection()->all();
+        /* @var $router RouterInterface */
+        $router      = $this->getContainer()->get('router');
+        $routes      = $router->getRouteCollection()->all();
         $definitions = array();
         foreach ($routes as $route) {
             /* @var $route \Symfony\Component\Routing\Route */
