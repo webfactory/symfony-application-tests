@@ -220,7 +220,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     }
 
     /**
-     * Uses the route reference to create an controller object.
+     * Uses the route reference to create a controller object.
      *
      * @param mixed $reference The controller reference from a route.
      * @return object|null
