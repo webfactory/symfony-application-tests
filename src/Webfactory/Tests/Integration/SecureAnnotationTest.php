@@ -196,10 +196,6 @@ class SecureAnnotationTest extends AbstractContainerTestCase
                 // No controller is assigned to this route.
                 continue;
             }
-            if (strpos($assignedController, 'assetic.') === 0) {
-                // Ignore Assetic controllers.
-                continue;
-            }
             $controller = $this->createController($assignedController);
             if ($controller === null) {
                 continue;
