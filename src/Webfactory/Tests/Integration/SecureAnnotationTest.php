@@ -5,6 +5,7 @@ namespace Webfactory\Tests\Integration;
 use Doctrine\Common\Util\ClassUtils;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -223,6 +224,11 @@ class SecureAnnotationTest extends AbstractContainerTestCase
         $resources = $router->getRouteCollection()->getResources();
         foreach ($resources as $resource) {
             /* @var $resource ResourceInterface */
+            if (!($resource instanceof FileResource)) {
+                // Only consider file resources as the other ones
+                // (for example Assetic resources) cannot be handled.
+                continue;
+            }
             if (!VendorResources::isVendorFile((string)$resource)) {
                 continue;
             }
