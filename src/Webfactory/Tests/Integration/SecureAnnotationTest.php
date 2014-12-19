@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
+use Webfactory\Util\ApplicationServiceIterator;
 use Webfactory\Util\DataProviderArgumentIterator;
 use Webfactory\Util\DataProviderIterator;
 use Webfactory\Util\VendorResources;
@@ -121,8 +122,13 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     {
         $classes = array();
         $builder = $this->getContainerBuilder();
-        foreach ($builder->getDefinitions() as $definition) {
-            /* @var $definition \Symfony\Component\DependencyInjection\Definition */
+        $serviceIds = new ApplicationServiceIterator(
+            $this->getKernel(),
+            new \ArrayIterator($builder->getServiceIds())
+        );
+        foreach ($serviceIds as $serviceId) {
+            /* @var $serviceId string */
+            $definition = $builder->findDefinition($serviceId);
             if ($definition->getClass() === null) {
                 continue;
             }
