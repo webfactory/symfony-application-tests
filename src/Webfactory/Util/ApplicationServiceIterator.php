@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Allows iteration over service that are defined directly in the application.
+ * Allows iteration over services that are defined directly in the application.
  *
  * Services that are defined by vendor bundles etc. are filtered and skipped.
  *
