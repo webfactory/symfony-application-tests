@@ -32,21 +32,33 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    /**
+     * Checks if the object is an iterator.
+     */
     public function testIsIterator()
     {
 
     }
 
+    /**
+     * Checks if templates on application level are recognized.
+     */
     public function testIteratesOverApplicationLevelTemplates()
     {
 
     }
 
+    /**
+     * Checks if bundle templates are recognized.
+     */
     public function testIteratesOverBundleTemplates()
     {
 
     }
 
+    /**
+     * Ensures that the iterator works if no template exists.
+     */
     public function testWorksIfNoTemplateFilesAreAvailable()
     {
 
