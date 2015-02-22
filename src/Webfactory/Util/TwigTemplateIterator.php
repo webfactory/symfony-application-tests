@@ -40,16 +40,15 @@ class TwigTemplateIterator implements \IteratorAggregate
         $this->kernel->boot();
         $viewDirectories = array();
         $globalResourceDirectory = $this->kernel->getRootDir() . '/Resources';
-        if (is_dir($globalResourceDirectory)) {
-            $viewDirectories[] = $globalResourceDirectory;
-        }
+        $viewDirectories[] = $globalResourceDirectory;
         foreach ($this->kernel->getBundles() as $bundle) {
             /* @var $bundle BundleInterface */
             $viewDirectory = $bundle->getPath() . '/Resources/views';
-            if (is_dir($viewDirectory)) {
-                $viewDirectories[] = $viewDirectory;
-            }
+            $viewDirectories[] = $viewDirectory;
         }
+        $viewDirectories = array_filter($viewDirectories, function ($directory) {
+            return is_dir($directory);
+        });
         if (count($viewDirectories) === 0) {
             return new \ArrayIterator();
         }
