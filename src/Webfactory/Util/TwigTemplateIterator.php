@@ -38,6 +38,21 @@ class TwigTemplateIterator implements \IteratorAggregate
     public function getIterator()
     {
         $this->kernel->boot();
+        $viewDirectories = $this->getPossibleViewDirectories();
+        $viewDirectories = $this->removeNotExistingDirectories($viewDirectories);
+        $templates       = $this->getTwigTemplatesIn($viewDirectories);
+        return new \ArrayIterator($templates);
+    }
+
+    /**
+     * Returns paths to directories that *might* contain Twig views.
+     *
+     * Please note, that it is not guaranteed that these directories exist.
+     *
+     * @return string[]
+     */
+    protected function getPossibleViewDirectories()
+    {
         $viewDirectories = array();
         $globalResourceDirectory = $this->kernel->getRootDir() . '/Resources';
         $viewDirectories[] = $globalResourceDirectory;
@@ -46,19 +61,39 @@ class TwigTemplateIterator implements \IteratorAggregate
             $viewDirectory = $bundle->getPath() . '/Resources/views';
             $viewDirectories[] = $viewDirectory;
         }
-        $viewDirectories = array_filter($viewDirectories, function ($directory) {
+        return $viewDirectories;
+    }
+
+    /**
+     * Removes all paths to not existing directories from the given list.
+     *
+     * @param string[] $directories
+     * @return string[]
+     */
+    protected function removeNotExistingDirectories(array $directories)
+    {
+        $directories = array_filter($directories, function ($directory) {
             return is_dir($directory);
         });
-        if (count($viewDirectories) === 0) {
-            return new \ArrayIterator();
+        return $directories;
+    }
+
+    /**
+     * Returns the paths to all Twig templates in the given directories.
+     *
+     * @param string[] $directories
+     * @return string[]
+     */
+    protected function getTwigTemplatesIn($directories)
+    {
+        if (count($directories) === 0) {
+            return array();
         }
-        $templates = Finder::create()->in($viewDirectories)->files()->name('*.*.twig');
+        $templates = Finder::create()->in($directories)->files()->name('*.*.twig');
         $templates = iterator_to_array($templates, false);
         $templates = array_map(function (SplFileInfo $file) {
             return $file->getRealPath();
         }, $templates);
-        return new \ArrayIterator($templates);
+        return $templates;
     }
-
-
 }
