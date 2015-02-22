@@ -116,7 +116,7 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
         $kernel->expects($this->any())
-            ->method('getRoot')
+            ->method('getRootDir')
             ->willReturn($this->getTestDataDirectory() . '/' . $name);
         $kernel->expects($this->any())
             ->method('getBundles')
