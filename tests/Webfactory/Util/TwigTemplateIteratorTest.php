@@ -41,6 +41,14 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that the iterator returns file paths.
+     */
+    public function testIteratorReturnsFilePaths()
+    {
+
+    }
+
+    /**
      * Checks if templates on application level are recognized.
      */
     public function testIteratesOverApplicationLevelTemplates()
@@ -52,6 +60,14 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
      * Checks if bundle templates are recognized.
      */
     public function testIteratesOverBundleTemplates()
+    {
+
+    }
+
+    /**
+     * Ensures that paths to normal files are not returned.
+     */
+    public function testDoesNotIteratorOverNonTemplates()
     {
 
     }
