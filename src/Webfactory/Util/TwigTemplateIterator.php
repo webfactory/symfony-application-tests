@@ -4,9 +4,9 @@ namespace Webfactory\Util;
 
 /**
  * Iterator that iterates over the file paths of all Twig templates that belong
- * to the application.
+ * to the application (application *and* vendor bundles).
  */
-class ApplicationTwigTemplateIterator
+class TwigTemplateIterator
 {
 
 }
