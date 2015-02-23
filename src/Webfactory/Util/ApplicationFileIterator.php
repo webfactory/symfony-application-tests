@@ -16,6 +16,10 @@ class ApplicationFileIterator extends \FilterIterator
     {
         if (is_array($files)) {
             $files = new \ArrayIterator($files);
+        } elseif (!($files instanceof \Iterator)) {
+            // Most probably a Traversable, but not an iterator, which is required
+            // by the parent class.
+            $files = new \IteratorIterator($files);
         }
         parent::__construct($files);
     }
