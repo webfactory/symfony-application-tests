@@ -3,13 +3,10 @@
 namespace Webfactory\Tests\Integration;
 
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Webfactory\Util\ApplicationFileIterator;
 use Webfactory\Util\DataProviderArgumentIterator;
 use Webfactory\Util\DataProviderIterator;
 use Webfactory\Util\TwigTemplateIterator;
-use Webfactory\Util\VendorResources;
 
 /**
  * Checks the Twig templates in the project.
@@ -80,21 +77,5 @@ class TwigTemplateTest extends AbstractContainerTestCase
         $kernel = $this->getKernel();
         $templates = new TwigTemplateIterator($kernel);
         return new ApplicationFileIterator($templates);
-    }
-
-    /**
-     * Creates a finder instance that automatically excludes files from vendor directories.
-     *
-     * The Finder's exclude() method accepts only relative paths, therefore we have to use
-     * a custom filter.
-     *
-     * @return Finder
-     */
-    protected function createFinder()
-    {
-        $finder = Finder::create()->filter(function (SplFileInfo $file) {
-            return !VendorResources::isVendorFile($file);
-        });
-        return $finder;
     }
 }
