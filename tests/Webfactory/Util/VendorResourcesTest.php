@@ -121,6 +121,25 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that isVendorFile() returns false if the path to an application directory
+     * is passed.
+     */
+    public function testIsVendorFileReturnsFalseIfApplicationDirectoryIsProvided()
+    {
+        $this->assertFalse(VendorResources::isVendorFile(__DIR__));
+    }
+
+    /**
+     * Ensures that isVendorFile() returns true if the path to a directory
+     * in the vendor folder is passed.
+     */
+    public function testIsVendorFileReturnsTrueIfVendorDirectoryIsProvided()
+    {
+        $directory = dirname($this->getVendorFilePath());
+        $this->assertTrue(VendorResources::isVendorFile($directory));
+    }
+
+    /**
      * Ensures that isVendorFile() throws an exception if the given path does not reference
      * an existing file.
      */
