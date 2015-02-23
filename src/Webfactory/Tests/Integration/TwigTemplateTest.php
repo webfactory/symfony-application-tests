@@ -5,10 +5,10 @@ namespace Webfactory\Tests\Integration;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Webfactory\Util\ApplicationBundleIterator;
+use Webfactory\Util\ApplicationFileIterator;
 use Webfactory\Util\DataProviderArgumentIterator;
 use Webfactory\Util\DataProviderIterator;
+use Webfactory\Util\TwigTemplateIterator;
 use Webfactory\Util\VendorResources;
 
 /**
@@ -73,29 +73,13 @@ class TwigTemplateTest extends AbstractContainerTestCase
     /**
      * Returns the paths to the template files in this application.
      *
-     * @return array(string)
+     * @return \Traversable
      */
     protected function getTemplateFiles()
     {
         $kernel = $this->getKernel();
-        $viewDirectories = array();
-        $globalResourceDirectory = $kernel->getRootDir() . '/Resources';
-        if (is_dir($globalResourceDirectory)) {
-            $viewDirectories[] = $globalResourceDirectory;
-        }
-        foreach (new ApplicationBundleIterator($kernel) as $bundle) {
-            /* @var $bundle BundleInterface */
-            $viewDirectory = $bundle->getPath() . '/Resources/views';
-            if (is_dir($viewDirectory)) {
-                $viewDirectories[] = $viewDirectory;
-            }
-        }
-        $templates = $this->createFinder()->in($viewDirectories)->files()->name('*.*.twig');
-        $templates = iterator_to_array($templates, false);
-        $templates = array_map(function (SplFileInfo $file) {
-            return $file->getRealPath();
-        }, $templates);
-        return $templates;
+        $templates = new TwigTemplateIterator($kernel);
+        return new ApplicationFileIterator($templates);
     }
 
     /**
