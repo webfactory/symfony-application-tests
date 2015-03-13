@@ -39,6 +39,7 @@
     "autoload": {
         "psr-0": {
             "Webfactory\\Tests": "src/",
+            "Webfactory\\Constraint": "src/",
             "Webfactory\\Util": "src/"
         }
     },
