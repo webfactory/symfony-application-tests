@@ -49,7 +49,8 @@
             "Webfactory\\TestBundle": "tests/_files/test-application/src"
         },
         "classmap": [
-            "tests/_files/test-application/app/TestKernel.php"
+            "tests/_files/test-application/app/TestKernel.php",
+            "tests/Webfactory/Constraint/_files"
         ],
         "files": [
             "tests/_files/test-application/app/bootstrap.php"
