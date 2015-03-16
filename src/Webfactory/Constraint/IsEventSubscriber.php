@@ -85,6 +85,19 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
             return;
         }
         list($method, $priority) = $listener;
+        $this->checkMethod($subscriber, $event, $method);
+        $this->checkPriority($event, $priority);
+    }
+
+    /**
+     * Checks the given subscriber method.
+     *
+     * @param EventSubscriberInterface $subscriber
+     * @param string $event
+     * @param string|mixed $method
+     */
+    protected function checkMethod($subscriber, $event, $method)
+    {
         if (!is_string($method)) {
             $message = 'Listener definition for event "%s" contains an invalid method reference: %s';
             $this->addProblem(sprintf($message, $event, $this->exporter->export($method)));
@@ -92,16 +105,26 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
         }
         if (!method_exists($subscriber, $method)) {
             $message = 'Listener definition for event "%s" references method "%s", '
-                     . 'but the method does not exist on subscriber.';
+                . 'but the method does not exist on subscriber.';
             $this->addProblem(sprintf($message, $event, $method));
             return;
         }
         if (!is_callable(array($subscriber, $method))) {
             $message = 'Listener definition for event "%s" references method "%s", '
-                     . 'but the method is not publicly accessible.';
+                . 'but the method is not publicly accessible.';
             $this->addProblem(sprintf($message, $event, $method));
             return;
         }
+    }
+
+    /**
+     * Checks the given priority.
+     *
+     * @param string $event
+     * @param integer|mixed $priority
+     */
+    protected function checkPriority($event, $priority)
+    {
         if (!is_int($priority)) {
             $message = 'Priority for event "%s" must be an integer, but received: %s';
             $this->addProblem(sprintf($message, $event, $this->exporter->export($priority)));
