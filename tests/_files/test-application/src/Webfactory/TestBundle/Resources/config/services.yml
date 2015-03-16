@@ -24,5 +24,10 @@ services:
         class: ArrayObject
         arguments: [[@webfactory_test.advanced.synthetic_service]]
 
+    webfactory_test.listener.test_subscriber:
+        class: Webfactory\TestBundle\EventListener\TestSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
     does_not_follow_service_id_convention:
         class: stdClass
