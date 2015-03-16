@@ -105,13 +105,13 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
         }
         if (!method_exists($subscriber, $method)) {
             $message = 'Listener definition for event "%s" references method "%s", '
-                . 'but the method does not exist on subscriber.';
+                     . 'but the method does not exist on subscriber.';
             $this->addProblem(sprintf($message, $event, $method));
             return;
         }
         if (!is_callable(array($subscriber, $method))) {
             $message = 'Listener definition for event "%s" references method "%s", '
-                . 'but the method is not publicly accessible.';
+                     . 'but the method is not publicly accessible.';
             $this->addProblem(sprintf($message, $event, $method));
             return;
         }
