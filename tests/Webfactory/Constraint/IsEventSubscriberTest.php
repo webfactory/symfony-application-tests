@@ -62,9 +62,19 @@ class IsEventSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that the check fails if the given method reference is not valid.
+     */
+    public function testFailsIfInvalidMethodReferenceIsProvided()
+    {
+        $subscriber = new TestSubscriber(array('event' => array(new \stdClass(), 0)));
+
+        $this->assertRejected($subscriber);
+    }
+
+    /**
      * Ensures that the validation detects a not existing event method.
      */
-    public function testFailsIfReferenceMethodDoesNotExist()
+    public function testFailsIfReferencedMethodDoesNotExist()
     {
         $subscriber = new TestSubscriber(array('event' => 'doesNotExist'));
 
