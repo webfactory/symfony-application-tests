@@ -37,7 +37,7 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
         foreach ($subscribedEvents as $event => $subscription) {
             /* @var $event string */
             /* @var $subscription mixed|string|array */
-            $this->checkListener($event, $subscription);
+            $this->checkListener($other, $event, $subscription);
         }
         return !$this->hasProblems();
     }
@@ -55,10 +55,11 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
     /**
      * Checks if the listener definition for the given event is valid.
      *
+     * @param EventSubscriberInterface $subscriber
      * @param string $event
      * @param mixed $listener
      */
-    protected function checkListener($event, $listener)
+    protected function checkListener(EventSubscriberInterface $subscriber, $event, $listener)
     {
         if (is_string($listener)) {
             // Add the default priority and use the default validation.
@@ -68,7 +69,58 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
             $this->addProblem(sprintf('Listener definition for event "%s" must be an array or a string.', $event));
             return;
         }
+        if (count($listener) === 1) {
+            // Method without priority.
+            $listener[] = 0;
+        }
+        if ($this->containsSeveralSubscriptions($listener)) {
+            foreach ($listener as $subListener) {
+                $this->checkListener($subscriber, $event, $subListener);
+            }
+            return;
+        }
+        if (count($listener) !== 2) {
+            $message = 'Listener definition for event "%s" must consist of a method and a priority, but received: %s';
+            $this->addProblem(sprintf($message, $event, $this->exporter->export($listener)));
+            return;
+        }
+        list($method, $priority) = $listener;
+        // string
+        if (!method_exists($subscriber, $method)) {
+            $message = 'Listener definition for event "%s" references method "%s", '
+                     . 'but the method does not exist on subscriber.';
+            $this->addProblem(sprintf($message, $event, $method));
+            return;
+        }
+        if (!is_callable(array($subscriber, $method))) {
+            $message = 'Listener definition for event "%s" references method "%s", '
+                     . 'but the method is not publicly accessible.';
+            $this->addProblem(sprintf($message, $event, $method));
+            return;
+        }
+        if (!is_int($priority)) {
+            $message = 'Priority for event "%s" must be an integer, but received: %s';
+            $this->addProblem(sprintf($message, $event, $this->exporter->export($priority)));
+            return;
+        }
+    }
 
+    /**
+     * Checks if the given subscriptions list contains only arrays (which means that
+     * it contains several descriptions).
+     *
+     * @param array(mixed) $subscriptions
+     * @return boolean
+     */
+    protected function containsSeveralSubscriptions(array $subscriptions)
+    {
+        foreach ($subscriptions as $subscription) {
+            /* @var mixed */
+            if (!is_array($subscription)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
