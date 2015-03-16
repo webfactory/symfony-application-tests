@@ -85,7 +85,11 @@ class IsEventSubscriber extends \PHPUnit_Framework_Constraint
             return;
         }
         list($method, $priority) = $listener;
-        // string
+        if (!is_string($method)) {
+            $message = 'Listener definition for event "%s" contains an invalid method reference: %s';
+            $this->addProblem(sprintf($message, $event, $this->exporter->export($method)));
+            return;
+        }
         if (!method_exists($subscriber, $method)) {
             $message = 'Listener definition for event "%s" references method "%s", '
                      . 'but the method does not exist on subscriber.';
