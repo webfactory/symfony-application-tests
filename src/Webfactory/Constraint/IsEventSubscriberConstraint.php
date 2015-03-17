@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Checks if an object is a correctly configured Symfony event subscriber.
  */
-class IsEventSubscriber extends \PHPUnit_Framework_Constraint
+class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
 {
     /**
      * List of detected problems.

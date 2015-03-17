@@ -7,12 +7,12 @@ use Webfactory\Constraint\Test\TestSubscriber;
 /**
  * Tests the event subscriber constraint.
  */
-class IsEventSubscriberTest extends \PHPUnit_Framework_TestCase
+class IsEventSubscriberConstraintTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * System under test.
      *
-     * @var IsEventSubscriber
+     * @var IsEventSubscriberConstraint
      */
     protected $constraint = null;
 
@@ -22,7 +22,7 @@ class IsEventSubscriberTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->constraint = new IsEventSubscriber();
+        $this->constraint = new IsEventSubscriberConstraint();
     }
 
     /**
@@ -146,7 +146,7 @@ class IsEventSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     protected function assertAccepted($subscriber)
     {
-        $this->assertThat($subscriber, new IsEventSubscriber());
+        $this->assertThat($subscriber, new IsEventSubscriberConstraint());
     }
 
     /**
@@ -156,6 +156,6 @@ class IsEventSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     protected function assertRejected($subscriber)
     {
-        $this->assertThat($subscriber, new \PHPUnit_Framework_Constraint_Not(new IsEventSubscriber()));
+        $this->assertThat($subscriber, new \PHPUnit_Framework_Constraint_Not(new IsEventSubscriberConstraint()));
     }
 }
