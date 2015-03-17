@@ -27,7 +27,8 @@ class EventSubscriberTest extends AbstractContainerTestCase
         $creator = new ServiceCreator($this->getContainer());
         /* @var $subscriber EventSubscriberInterface */
         $subscriber = $creator->create($service->getServiceId());
-        $this->assertThat($subscriber, new IsEventSubscriber());
+        $message = 'Service "%s" is not a valid event subscriber.';
+        $this->assertThat($subscriber, new IsEventSubscriber(), sprintf($message, $service->getServiceId()));
     }
 
     /**
