@@ -20,7 +20,8 @@ class ValidatorTest extends AbstractContainerTestCase
     public function testRegisteredValidatorsImplementCorrectInterface(TaggedService $service = null)
     {
         if ($service === null) {
-            $this->markTestSkipped('No validators registered, nothing to test.');
+            // No validators registered, nothing to test.
+            return;
         }
 
         $creator = new ServiceCreator($this->getContainer());

@@ -34,7 +34,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
         Secure $annotation = null
     ) {
         if ($method === null && $annotation === null) {
-            $this->markTestSkipped('No @Secure annotations found, nothing to test.');
+            // No @Secure annotations found, nothing to test.
+            return;
         }
         foreach ($annotation->roles as $role) {
             /* @var $role string */
@@ -62,7 +63,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     public function testNonServiceControllerDoesNotUseSecureAnnotations($class = null)
     {
         if ($class === null) {
-            $this->markTestSkipped('No controllers found that are not registered as service. Nothing to test.');
+            // No controllers found that are not registered as service. Nothing to test.
+            return;
         }
         $info = new \ReflectionClass($class);
         $methodsWithAnnotation = array();
