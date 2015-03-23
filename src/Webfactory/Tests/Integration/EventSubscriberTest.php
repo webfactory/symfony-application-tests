@@ -21,7 +21,8 @@ class EventSubscriberTest extends AbstractContainerTestCase
     public function testRegisteredEventSubscribers(TaggedService $service = null)
     {
         if ($service === null) {
-            $this->markTestSkipped('No event subscribers registered, nothing to test.');
+            // No event subscribers registered, nothing to test.
+            return;
         }
 
         $creator = new ServiceCreator($this->getContainer());

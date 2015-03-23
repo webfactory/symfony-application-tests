@@ -22,7 +22,8 @@ class TwigTemplateTest extends AbstractContainerTestCase
     public function testTemplateCanBeCompiled($templatePath = null)
     {
         if ($templatePath === null) {
-            $this->markTestSkipped('No Twig templates found. Nothing to test.');
+            // No Twig templates found. Nothing to test.
+            return;
         }
         $loader = new \Twig_Loader_Filesystem(dirname($templatePath));
         $twig   = $this->getTwigEnvironment();

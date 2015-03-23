@@ -19,7 +19,8 @@ class TwigExtensionTest extends AbstractContainerTestCase
     public function testRegisteredTwigExtensionsImplementCorrectInterface(TaggedService $service = null)
     {
         if ($service === null) {
-            $this->markTestSkipped('No twig extensions registered, nothing to test.');
+            // No twig extensions registered, nothing to test.
+            return;
         }
 
         $creator = new ServiceCreator($this->getContainer());
