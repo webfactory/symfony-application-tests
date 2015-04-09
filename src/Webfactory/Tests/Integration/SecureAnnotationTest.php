@@ -22,6 +22,17 @@ use Webfactory\Util\VendorResources;
 class SecureAnnotationTest extends AbstractContainerTestCase
 {
     /**
+     * Special roles that are always allowed, regardless of the security configuration.
+     *
+     * @var string[]
+     */
+    protected $specialRoles = array(
+        'IS_AUTHENTICATED_ANONYMOUSLY',
+        'IS_AUTHENTICATED_REMEMBERED',
+        'IS_AUTHENTICATED_FULLY'
+    );
+
+    /**
      * Checks if all "@Secure" annotations in the services reference
      * existing roles.
      *
@@ -156,6 +167,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             /* $inheritedRoles array(string) */
             $roles = array_merge($roles, $inheritedRoles);
         }
+        $roles = array_merge($roles, $this->specialRoles);
         return array_unique($roles);
     }
 
