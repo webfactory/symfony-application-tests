@@ -37,3 +37,12 @@ to configure the class of the kernel:
 ```
 
 To make this work, the kernel must be loadable by the class loader.
+
+## Credits, Copyright and License ##
+
+This bundle was started at webfactory GmbH, Bonn.
+
+- <http://www.webfactory.de>
+- <http://twitter.com/webfactory>
+
+Copyright 2014-2015 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
