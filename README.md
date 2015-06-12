@@ -54,6 +54,20 @@ Example:
 
 Each application service must be at least instantiable (abstract and synthetic services are excluded).
 
+## Installation ##
+
+Add the following to composer.json (see http://getcomposer.org/):
+
+    "require-dev" :  {
+        // ...
+        "webfactory/symfony-application-tests": "~0.3"
+    }
+
+If you don't have a `require-dev` key in your `composer.json` file, just
+add one! You can alternatively add this to your `require` key and things
+will work just fine. Confused about the difference? See:
+[GetComposer.org: require-dev](https://getcomposer.org/doc/04-schema.md#require-dev).
+
 ## Usage ##
 
 Simply add the tests directory to your ``phpunit.xml``:
