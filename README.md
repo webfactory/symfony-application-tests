@@ -91,6 +91,8 @@ Therefore, you might have to configure your kernel directory:
 
 Details are available at http://symfony.com/doc/current/book/testing.html#your-first-functional-test.
 
+### Advanced Kernel Configuration ###
+
 If the kernel directory configuration does not suit your needs, then you also have the opportunity
 to configure the class of the kernel:
 
