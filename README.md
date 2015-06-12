@@ -106,7 +106,7 @@ To make this work, the kernel must be loadable by the class loader.
 
 ## Credits, Copyright and License ##
 
-This bundle was started at webfactory GmbH, Bonn.
+This library was started at webfactory GmbH, Bonn.
 
 - <http://www.webfactory.de>
 - <http://twitter.com/webfactory>
