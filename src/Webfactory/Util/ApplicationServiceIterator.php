@@ -178,14 +178,16 @@ class ApplicationServiceIterator extends \FilterIterator
         }
         // Load the application configuration, which might affect the loaded services.
         $locator = new FileLocator($this->kernel);
-        $resolver = new LoaderResolver(array(
+        $loaders = array(
             new XmlFileLoader($builder, $locator),
             new YamlFileLoader($builder, $locator),
             new IniFileLoader($builder, $locator),
             new PhpFileLoader($builder, $locator),
-            new DirectoryLoader($builder, $locator),
+            (class_exists(DirectoryLoader::class) ? new DirectoryLoader($builder, $locator) : null),
             new ClosureLoader($builder),
-        ));
+        );
+        $loaders = array_filter($loaders);
+        $resolver = new LoaderResolver($loaders);
         $loader = new DelegatingLoader($resolver);
         $this->kernel->registerContainerConfiguration($loader);
         return $builder;
