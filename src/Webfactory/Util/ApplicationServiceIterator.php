@@ -2,8 +2,17 @@
 
 namespace Webfactory\Util;
 
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
+use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
+use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -86,9 +95,9 @@ class ApplicationServiceIterator extends \FilterIterator
     protected function getIdsOfServicesThatAreDefinedInApplication()
     {
         if ($this->serviceIdWhitelist === null) {
-            $builder = new ContainerBuilder();
+            $builder = $this->createContainerBuilder();
             $this->applyToExtensions(function (ExtensionInterface $extension) use ($builder) {
-                $extension->load(array(), $builder);
+                $extension->load($builder->getExtensionConfig($extension->getAlias()), $builder);
             });
             $this->serviceIdWhitelist = $builder->getServiceIds();
         }
@@ -147,5 +156,41 @@ class ApplicationServiceIterator extends \FilterIterator
             }
         }
         return false;
+    }
+
+    /**
+     * Creates a pre-configured container builder.
+     *
+     * The builder contains all extensions and its configurations.
+     *
+     * @return ContainerBuilder
+     */
+    protected function createContainerBuilder()
+    {
+        $builder = new ContainerBuilder();
+        $this->kernel->boot();
+        foreach ($this->kernel->getBundles() as $bundle) {
+            // Register all extensions, otherwise there might be config parts that cannot be processed.
+            $extension = $bundle->getContainerExtension();
+            if ($extension !== null) {
+                $builder->registerExtension($extension);
+            }
+        }
+        // Load the application configuration, which might affect the loaded services.
+        /* @var $locator FileLocatorInterface */
+        $locator = $this->kernel->getContainer()->get('file_locator');
+        $loaders = array(
+            new XmlFileLoader($builder, $locator),
+            new YamlFileLoader($builder, $locator),
+            new IniFileLoader($builder, $locator),
+            new PhpFileLoader($builder, $locator),
+            (class_exists(DirectoryLoader::class) ? new DirectoryLoader($builder, $locator) : null),
+            new ClosureLoader($builder),
+        );
+        $loaders = array_filter($loaders);
+        $resolver = new LoaderResolver($loaders);
+        $loader = new DelegatingLoader($resolver);
+        $this->kernel->registerContainerConfiguration($loader);
+        return $builder;
     }
 }

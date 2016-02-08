@@ -12,11 +12,15 @@ class WebfactoryTestExtension extends Extension
     /**
      * Loads service definitions.
      *
-     * @param array $configs
+     * @param array $config
      * @param ContainerBuilder $container
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $config, ContainerBuilder $container)
     {
+        // Process the config, which checks if the required parameter is set.
+        $configuration = new Configuration();
+        $this->processConfiguration($configuration, $config);
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
