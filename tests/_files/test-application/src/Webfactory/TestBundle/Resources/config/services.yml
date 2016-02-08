@@ -22,7 +22,7 @@ services:
 
     webfactory_test.advanced.depending_on_synthetic_service:
         class: ArrayObject
-        arguments: [[@webfactory_test.advanced.synthetic_service]]
+        arguments: [["@webfactory_test.advanced.synthetic_service"]]
 
     webfactory_test.listener.test_subscriber:
         class: Webfactory\TestBundle\EventListener\TestSubscriber
