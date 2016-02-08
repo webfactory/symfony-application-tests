@@ -2,6 +2,7 @@
 
 namespace Webfactory\Util;
 
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,7 +14,6 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -177,7 +177,8 @@ class ApplicationServiceIterator extends \FilterIterator
             }
         }
         // Load the application configuration, which might affect the loaded services.
-        $locator = new FileLocator($this->kernel);
+        /* @var $locator FileLocatorInterface */
+        $locator = $this->kernel->getContainer()->get('file_locator');
         $loaders = array(
             new XmlFileLoader($builder, $locator),
             new YamlFileLoader($builder, $locator),
