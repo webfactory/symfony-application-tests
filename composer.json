@@ -11,8 +11,9 @@
             "role": "Developer"
         }
     ],
+
     "require": {
-        "php": ">=5.3.10",
+        "php": "^5.5.0 | ^7.0.0",
         "symfony/framework-bundle": "~2.3",
         "symfony/form": "~2.3",
         "symfony/validator": "~2.3",
@@ -55,5 +56,11 @@
         "files": [
             "tests/_files/test-application/app/bootstrap.php"
         ]
+    },
+
+    "config": {
+        "platform": {
+            "php": "5.5"
+        }
     }
 }
