@@ -18,7 +18,7 @@
         "twig/twig": "~1.14",
         "jms/security-extra-bundle": "~1.5",
         "doctrine/common": "~2.4",
-        "phpunit/phpunit": "~3.7 | ~4.0"
+        "phpunit/phpunit": "~4.0"
     },
 
     "require-dev": {
