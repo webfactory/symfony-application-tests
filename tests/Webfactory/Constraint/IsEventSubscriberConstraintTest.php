@@ -140,6 +140,20 @@ class IsEventSubscriberConstraintTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Checks if a method list with a single prioritized entry is accepted:
+     *
+     * - array('eventName' => array(array('methodName1', $priority))
+     *
+     * @see https://github.com/webfactory/symfony-application-tests/issues/27
+     */
+    public function testAcceptsSubscriberWithWithSinglePrioritizedReferenceInList()
+    {
+        $subscriber = new TestSubscriber(array('event' => array(array('hookMethod', 42))));
+
+        $this->assertAccepted($subscriber);
+    }
+
+    /**
      * Asserts that the given subscriber is accepted.
      *
      * @param mixed $subscriber
