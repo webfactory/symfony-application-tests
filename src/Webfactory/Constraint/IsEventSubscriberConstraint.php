@@ -69,16 +69,17 @@ class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
             $this->addProblem(sprintf('Listener definition for event "%s" must be an array or a string.', $event));
             return;
         }
-        if (count($listener) === 1) {
-            // Method without priority.
-            $listener[] = 0;
-        }
         if ($this->containsSeveralSubscriptions($listener)) {
             foreach ($listener as $subListener) {
                 $this->checkListener($subscriber, $event, $subListener);
             }
             return;
         }
+        if (count($listener) === 1) {
+            // Method without priority.
+            $listener[] = 0;
+        }
+
         if (count($listener) !== 2) {
             $message = 'Listener definition for event "%s" must consist of a method and a priority, but received: %s';
             $this->addProblem(sprintf($message, $event, $this->exporter->export($listener)));
