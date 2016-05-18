@@ -1,5 +1,11 @@
 language: php
 
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
   - '5.5'
   - '5.6'
@@ -21,7 +27,7 @@ before_script:
     # Register a specific Symfony version if necessary...
     - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then php composer.phar require --no-update symfony/symfony:${SYMFONY_VERSION}; fi"
       # ... and update the dependencies accordingly.
-    - travis_retry sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then php composer.phar update; fi"
+    - travis_retry sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then php composer.phar update --no-interaction --prefer-source; fi"
     - mkdir -p build/logs
 
 script:
