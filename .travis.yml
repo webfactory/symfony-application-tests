@@ -14,18 +14,18 @@ php:
 
 env:
   - SYMFONY_VERSION=locked # Use the versions that are given in composer.lock.
-  - SYMFONY_VERSION="2.3.*"
-  - SYMFONY_VERSION="2.4.*"
-  - SYMFONY_VERSION="2.5.*"
-  - SYMFONY_VERSION="2.6.*"
-  - SYMFONY_VERSION="2.7.*"
-  - SYMFONY_VERSION="2.8.*"
+  - SYMFONY_VERSION="2.3.*" PHPUNIT_VERSION="^4.0.0"
+  - SYMFONY_VERSION="2.4.*" PHPUNIT_VERSION="^4.0.0"
+  - SYMFONY_VERSION="2.5.*" PHPUNIT_VERSION="^4.0.0"
+  - SYMFONY_VERSION="2.6.*" PHPUNIT_VERSION="^4.0.0"
+  - SYMFONY_VERSION="2.7.*" PHPUNIT_VERSION="^4.0.0"
+  - SYMFONY_VERSION="2.8.*" PHPUNIT_VERSION="^4.0.0"
 
 before_script:
     - composer self-update
     - composer install --no-interaction --prefer-source
     # Register a specific Symfony version if necessary...
-    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi"
+    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION} phpunit/phpunit:${PHPUNIT_VERSION}; fi"
       # ... and update the dependencies accordingly.
     - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer update --no-interaction --prefer-source; fi"
     - mkdir -p build/logs
