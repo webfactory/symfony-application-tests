@@ -74,8 +74,14 @@ class ServiceCreatorTest extends \PHPUnit_Framework_TestCase
     public function testCreatorThrowsExceptionIfItIsNotPossibleToCreateService()
     {
         $definition = new Definition();
-        $definition->setFactoryClass('Webfactory\Missing');
-        $definition->setFactoryMethod('create');
+        // Use the new way to define factories if available or fall back to the
+        // mechanism from previous Symfony versions.
+        if (method_exists($definition, 'setFactory')) {
+            $definition->setFactory(array('Webfactory\Missing', 'create'));
+        } else {
+            $definition->setFactoryClass('Webfactory\Missing');
+            $definition->setFactoryMethod('create');
+        }
         $this->container->setDefinition('my.service', $definition);
 
         $this->setExpectedException('Webfactory\Util\CannotInstantiateServiceException');
