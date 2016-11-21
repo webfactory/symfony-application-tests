@@ -25,6 +25,7 @@ env:
   - SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^5.0.0"
 
 before_script:
+    - phpenv config-add .travis/php.ini
     - composer self-update
     - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
     # Register a specific dependency versions if necessary...
