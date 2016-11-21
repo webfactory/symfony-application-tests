@@ -48,8 +48,8 @@ class ValidatorTest extends AbstractContainerTestCase
         }
 
         if (
-            defined('Symfony\\Component\\HttpKernel\\Kernel::MAJOR_VERSION') && Kernel::MAJOR_VERSION >= 2
-            && defined('Symfony\\Component\\HttpKernel\\Kernel::MINOR_VERSION') && Kernel::MINOR_VERSION >= 7
+            defined('Symfony\\Component\\HttpKernel\\Kernel::VERSION')
+            && version_compare(Kernel::VERSION, '2.7', '>=')
         ) {
             // As of Symfony 2.7, validator services don't need to be aliased in every case.
             return;
