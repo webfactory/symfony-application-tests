@@ -25,7 +25,7 @@ must be callable.
 
 ### Validators ###
 
-Registered validators must implement the correct interface and an alias must be provided in the configuration.
+Registered validators must implement the correct interface and in Symfony < 2.7, an alias must be provided in the configuration.
 
 ### Form Types ###
 
