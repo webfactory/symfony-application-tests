@@ -31,6 +31,28 @@ class ValidatorTest extends AbstractContainerTestCase
         $message = 'Service "%s" is tagged as validator, but it does not implement the required interface.';
         $message = sprintf($message, $service->getServiceId());
         $this->assertInstanceOf('\Symfony\Component\Validator\ConstraintValidatorInterface', $validator, $message);
+    }
+
+    /**
+     * Checks if the validators that are configured in the container are aliased in Symfony Versions < 2.7.
+     *
+     * @param TaggedService $service
+     * @dataProvider getValidators
+     */
+    public function testRegisteredValidatorsAreAliasedInOlderSymfonyVersions(TaggedService $service = null)
+    {
+        if ($service === null) {
+            // No validators registered, nothing to test.
+            return;
+        }
+
+        if (
+            defined('Symfony\\Component\\HttpKernel\\Kernel::MAJOR_VERSION') && Kernel::MAJOR_VERSION >= 2
+            && defined('Symfony\\Component\\HttpKernel\\Kernel::MINOR_VERSION') && Kernel::MINOR_VERSION >= 7
+        ) {
+            // As of Symfony 2.7, validator services don't need to be aliased in every case.
+            return;
+        }
 
         $tagDefinition = $service->getTagDefinition();
         $message = 'An alias must be defined for validation service "%s".';
