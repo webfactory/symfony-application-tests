@@ -2,6 +2,7 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Symfony\Component\HttpKernel\Kernel;
 use Webfactory\Util\ServiceCreator;
 use Webfactory\Util\TaggedService;
 
