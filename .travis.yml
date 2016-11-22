@@ -26,7 +26,7 @@ env:
 
 before_script:
     - php -r "echo ini_get('memory_limit').PHP_EOL;"
-    - phpenv config-add travis.php.ini
+    - sh -c "if [ -f 'travis.php.ini' ]; then phpenv config-add travis.php.ini; fi"
     - php -r "echo ini_get('memory_limit').PHP_EOL;"
     - composer self-update
     - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
