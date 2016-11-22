@@ -25,7 +25,9 @@ env:
   - SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^5.0.0"
 
 before_script:
+    - php -r "echo ini_get('memory_limit').PHP_EOL;"
     - phpenv config-add travis/php.ini
+    - php -r "echo ini_get('memory_limit').PHP_EOL;"
     - composer self-update
     - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
     # Register a specific dependency versions if necessary...
