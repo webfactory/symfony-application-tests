@@ -25,18 +25,18 @@ env:
   - SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^5.0.0"
 
 before_script:
-    - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ] && [ -f 'travis.php.ini' ]; then phpenv config-add travis.php.ini; fi"
-    - composer self-update
-    - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
-    # Register a specific dependency versions if necessary...
-    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION} phpunit/phpunit:${PHPUNIT_VERSION}; fi"
-      # ... and update the dependencies accordingly, without restrictions regarding the PHP version.
-    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer config --unset platform.php; composer update --no-interaction --prefer-source; fi"
-    - mkdir -p build/logs
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ] && [ -f 'travis.php.ini' ]; then phpenv config-add travis.php.ini; fi"
+  - composer self-update
+  - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
+  # Register a specific dependency versions if necessary...
+  - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION} phpunit/phpunit:${PHPUNIT_VERSION}; fi"
+    # ... and update the dependencies accordingly, without restrictions regarding the PHP version.
+  - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer config --unset platform.php; composer update --no-interaction --prefer-source; fi"
+  - mkdir -p build/logs
 
 script:
-    - composer validate --strict
-    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - composer validate --strict
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 matrix:
   exclude:
