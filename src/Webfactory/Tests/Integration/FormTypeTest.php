@@ -2,6 +2,7 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Webfactory\Util\ServiceCreator;
 use Webfactory\Util\TaggedService;
@@ -31,7 +32,7 @@ class FormTypeTest extends AbstractContainerTestCase
         $type = $creator->create($service->getServiceId());
         $message = 'Service "%s" is tagged as form type, but it does not implement the required interface.';
         $message = sprintf($message, $service->getServiceId());
-        $this->assertInstanceOf('\Symfony\Component\Form\FormTypeInterface', $type, $message);
+        $this->assertInstanceOf(FormTypeInterface::class, $type, $message);
 
 
         // The alias constraint is only relevant for form types in Symfony < 2.8.
