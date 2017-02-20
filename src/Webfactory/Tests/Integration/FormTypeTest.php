@@ -2,6 +2,7 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Symfony\Component\HttpKernel\Kernel;
 use Webfactory\Util\ServiceCreator;
 use Webfactory\Util\TaggedService;
 
@@ -33,9 +34,13 @@ class FormTypeTest extends AbstractContainerTestCase
         $this->assertInstanceOf('\Symfony\Component\Form\FormTypeInterface', $type, $message);
 
         $tagDefinition = $service->getTagDefinition();
-        $message = 'An alias must be defined for form type "%s".';
-        $message = sprintf($message, $service->getServiceId());
-        $this->assertArrayHasKey('alias', $service->getTagDefinition(), $message);
+        if (version_compare(Kernel::VERSION, '2.8.0', '<')) {
+            // The alias constraint is only relevant for form types in Symfony < 2.8.
+            // Newer Symfony version do not use the alias and reference form types by class name.
+            $message = 'An alias must be defined for form type "%s".';
+            $message = sprintf($message, $service->getServiceId());
+            $this->assertArrayHasKey('alias', $service->getTagDefinition(), $message);
+        }
 
         $message = 'Form type name and assigned alias must match, but service "%s" '
                  . 'uses "%s" as name and "%s" as alias.';
