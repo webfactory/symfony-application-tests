@@ -34,7 +34,6 @@ class FormTypeTest extends AbstractContainerTestCase
         $message = sprintf($message, $service->getServiceId());
         $this->assertInstanceOf(FormTypeInterface::class, $type, $message);
 
-
         // The alias constraint is only relevant for form types in Symfony < 2.8.
         // Newer Symfony version do not use the alias and reference form types by class name.
         if (version_compare(Kernel::VERSION, '2.8.0', '<')) {
