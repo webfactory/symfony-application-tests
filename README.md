@@ -104,6 +104,12 @@ to configure the class of the kernel:
 
 To make this work, the kernel must be loadable by the class loader.
 
+## Changelog ##
+
+### 0.5.3 -> 0.6.0 ###
+
+Removed constraints on form type aliases, which are deprecated since Symfony 2.8.
+
 ## Credits, Copyright and License ##
 
 This library was started at webfactory GmbH, Bonn.
