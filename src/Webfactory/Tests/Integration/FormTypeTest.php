@@ -2,6 +2,8 @@
 
 namespace Webfactory\Tests\Integration;
 
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Webfactory\Util\ServiceCreator;
 use Webfactory\Util\TaggedService;
 
@@ -30,17 +32,21 @@ class FormTypeTest extends AbstractContainerTestCase
         $type = $creator->create($service->getServiceId());
         $message = 'Service "%s" is tagged as form type, but it does not implement the required interface.';
         $message = sprintf($message, $service->getServiceId());
-        $this->assertInstanceOf('\Symfony\Component\Form\FormTypeInterface', $type, $message);
+        $this->assertInstanceOf(FormTypeInterface::class, $type, $message);
 
-        $tagDefinition = $service->getTagDefinition();
-        $message = 'An alias must be defined for form type "%s".';
-        $message = sprintf($message, $service->getServiceId());
-        $this->assertArrayHasKey('alias', $service->getTagDefinition(), $message);
+        // The alias constraint is only relevant for form types in Symfony < 2.8.
+        // Newer Symfony version do not use the alias and reference form types by class name.
+        if (version_compare(Kernel::VERSION, '2.8.0', '<')) {
+            $tagDefinition = $service->getTagDefinition();
+            $message = 'An alias must be defined for form type "%s".';
+            $message = sprintf($message, $service->getServiceId());
+            $this->assertArrayHasKey('alias', $service->getTagDefinition(), $message);
 
-        $message = 'Form type name and assigned alias must match, but service "%s" '
-                 . 'uses "%s" as name and "%s" as alias.';
-        $message = sprintf($message, $service->getServiceId(), $type->getName(), $tagDefinition['alias']);
-        $this->assertEquals($type->getName(), $tagDefinition['alias'], $message);
+            $message = 'Form type name and assigned alias must match, but service "%s" '
+                     . 'uses "%s" as name and "%s" as alias.';
+            $message = sprintf($message, $service->getServiceId(), $type->getName(), $tagDefinition['alias']);
+            $this->assertEquals($type->getName(), $tagDefinition['alias'], $message);
+        }
     }
 
     /**
