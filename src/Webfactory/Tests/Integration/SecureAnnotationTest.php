@@ -252,6 +252,13 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             if (!VendorResources::isVendorFile((string)$resource)) {
                 continue;
             }
+            if ($this->isClassFile((string)$resource)) {
+                // Do not load class files, otherwise a "Cannot redeclare class" error could
+                // occur and kill the test suite.
+                // This situation can occur when a service is used to generate routes (e.g. that's the case
+                // if the new MicroKernel is used).
+                continue;
+            }
             /* @var $loader LoaderInterface */
             $loader = $this->getContainer()->get('routing.loader');
             /* @var $vendorRoutes RouteCollection */
@@ -294,5 +301,27 @@ class SecureAnnotationTest extends AbstractContainerTestCase
             return null;
         }
         return $controller;
+    }
+
+    /**
+     * Checks if the given file contains an already loaded class.
+     *
+     * @param string $file
+     * @return boolean
+     */
+    private function isClassFile($file)
+    {
+        $loadedClasses = get_declared_classes();
+        foreach ($loadedClasses as $loadedClass) {
+            /* @var $loadedClass string */
+            $class = new \ReflectionClass($loadedClass);
+            if (!$class->isUserDefined()) {
+                continue;
+            }
+            if ($file === $class->getFileName()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
