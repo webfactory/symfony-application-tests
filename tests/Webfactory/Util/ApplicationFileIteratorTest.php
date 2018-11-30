@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the application file iterator.
  */
-class ApplicationFileIteratorTest extends \PHPUnit_Framework_TestCase
+class ApplicationFileIteratorTest extends TestCase
 {
     /**
      * System under test.

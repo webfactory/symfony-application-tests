@@ -39,6 +39,7 @@ class ValidatorTest extends AbstractContainerTestCase
      *
      * @param TaggedService $service
      * @dataProvider getValidators
+     * @doesNotPerformAssertions
      */
     public function testRegisteredValidatorsAreAliasedInOlderSymfonyVersions(TaggedService $service = null)
     {

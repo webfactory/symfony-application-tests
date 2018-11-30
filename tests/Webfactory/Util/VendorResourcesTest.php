@@ -2,12 +2,13 @@
 
 namespace Webfactory\Util;
 use Composer\Autoload\ClassLoader;
+use PHPUnit\Framework\TestCase;
 use Webfactory\TestBundle\Form\ContactType;
 
 /**
  * Tests the vendor directory helper methods.
  */
-class VendorResourcesTest extends \PHPUnit_Framework_TestCase
+class VendorResourcesTest extends TestCase
 {
     /**
      * Checks if getVendorDirectory() returns the path to a directory.
@@ -80,7 +81,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorClassThrowsExceptionIfNoClassNameOrObjectIsPassed()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         VendorResources::isVendorClass('NoValidClassName');
     }
 
@@ -145,7 +146,7 @@ class VendorResourcesTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVendorFileThrowsExceptionIfNoValidFileReferenceIsProvided()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         VendorResources::isVendorFile(__DIR__ . '/this/files/does/not/exist');
     }
 

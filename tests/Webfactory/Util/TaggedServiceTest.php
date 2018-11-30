@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the class that holds information about a tagged service.
  */
-class TaggedServiceTest extends \PHPUnit_Framework_TestCase
+class TaggedServiceTest extends TestCase
 {
     /**
      * System under test.

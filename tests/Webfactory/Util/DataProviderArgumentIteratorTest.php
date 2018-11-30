@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the argument iterator.
  */
-class DataProviderArgumentIteratorTest extends \PHPUnit_Framework_TestCase
+class DataProviderArgumentIteratorTest extends TestCase
 {
     /**
      * Checks if the iterator is traversable.

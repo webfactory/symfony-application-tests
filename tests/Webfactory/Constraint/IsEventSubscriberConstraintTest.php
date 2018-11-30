@@ -2,12 +2,14 @@
 
 namespace Webfactory\Constraint;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\LogicalNot;
 use Webfactory\Constraint\Test\TestSubscriber;
 
 /**
  * Tests the event subscriber constraint.
  */
-class IsEventSubscriberConstraintTest extends \PHPUnit_Framework_TestCase
+class IsEventSubscriberConstraintTest extends TestCase
 {
     /**
      * System under test.
@@ -170,6 +172,6 @@ class IsEventSubscriberConstraintTest extends \PHPUnit_Framework_TestCase
      */
     protected function assertRejected($subscriber)
     {
-        $this->assertThat($subscriber, new \PHPUnit_Framework_Constraint_Not(new IsEventSubscriberConstraint()));
+        $this->assertThat($subscriber, new LogicalNot(new IsEventSubscriberConstraint()));
     }
 }

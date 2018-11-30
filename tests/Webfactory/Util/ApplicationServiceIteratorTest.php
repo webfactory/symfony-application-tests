@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the application service iterator.
  */
-class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
+class ApplicationServiceIteratorTest extends TestCase
 {
     /**
      * System under test.
@@ -129,7 +131,7 @@ class ApplicationServiceIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function createServiceIdObject($serviceId)
     {
-        $object = $this->getMock('stdClass', array('__toString'));
+        $object = $this->getMockBuilder('stdClass')->setMethods(['__toString'])->getMock();
         $object->expects($this->any())
                ->method('__toString')
                ->will($this->returnValue($serviceId));

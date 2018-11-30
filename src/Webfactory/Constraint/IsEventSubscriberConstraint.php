@@ -2,12 +2,13 @@
 
 namespace Webfactory\Constraint;
 
+use PHPUnit\Framework\Constraint\Constraint;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Checks if an object is a correctly configured Symfony event subscriber.
  */
-class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
+class IsEventSubscriberConstraint extends Constraint
 {
     /**
      * List of detected problems.
@@ -22,7 +23,7 @@ class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
      * @param  mixed $other
      * @return boolean
      */
-    protected function matches($other)
+    protected function matches($other): bool
     {
         $this->resetProblems();
         if (!($other instanceof EventSubscriberInterface)) {
@@ -47,7 +48,7 @@ class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'is a valid EventSubscriber.';
     }
@@ -188,7 +189,7 @@ class IsEventSubscriberConstraint extends \PHPUnit_Framework_Constraint
      * @param  mixed  $other Evaluated value or object.
      * @return string
      */
-    protected function additionalFailureDescription($other)
+    protected function additionalFailureDescription($other): string
     {
         $problems = array_map(function ($problem) {
             return '- ' . $problem;

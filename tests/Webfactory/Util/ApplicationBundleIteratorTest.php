@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the iterator that determines application bundles.
  */
-class ApplicationBundleIteratorTest extends \PHPUnit_Framework_TestCase
+class ApplicationBundleIteratorTest extends TestCase
 {
     /**
      * System under test.

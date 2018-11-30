@@ -34,7 +34,6 @@ class TwigTemplateTest extends AbstractContainerTestCase
         $twig->setLoader($combinedLoader);
         $fileName = basename($templatePath);
 
-        $this->setExpectedException(null);
         $twig->loadTemplate($fileName);
     }
 

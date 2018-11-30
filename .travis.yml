@@ -7,22 +7,12 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - '5.5'
-  - '5.6'
-  - '7.0'
-  - 'hhvm'
+  - '7.2'
 
 env:
   - SYMFONY_VERSION=locked PHPUNIT_VERSION=locked # Use the versions that are given in composer.lock.
-  - SYMFONY_VERSION="2.3.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.4.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.5.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.6.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.7.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.8.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="2.8.*" PHPUNIT_VERSION="^5.0.0"
-  - SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^4.0.0"
-  - SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^5.0.0"
+  - SYMFONY_VERSION="2.8.*" PHPUNIT_VERSION="^7.4.0"
+  - SYMFONY_VERSION="3.4.*" PHPUNIT_VERSION="^7.4.0"
 
 before_script:
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ] && [ -f 'travis.php.ini' ]; then phpenv config-add travis.php.ini; fi"
@@ -37,18 +27,3 @@ before_script:
 script:
   - composer validate --strict
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-
-matrix:
-  exclude:
-    # PHPUnit 5 requires PHP 5.6. Therefore, exclude builds against PHP 5.5.
-    - php: '5.5'
-      env: SYMFONY_VERSION="2.8.*" PHPUNIT_VERSION="^5.0.0"
-    - php: '5.5'
-      env: SYMFONY_VERSION="3.0.*" PHPUNIT_VERSION="^5.0.0"
-  allow_failures:
-    - php: hhvm
-
-notifications:
-  hipchat:
-    rooms:
-      secure: "U6zvjfNRPKPAdsl1NFDR2uFXsKUVwo2/+/S3M8Ovep6Iualsq3T21Gg/Bvll1IqJRY07aOFMkedQZYEP++mNzweNfPxHZAw47UEV4LO9B3R7VdpYO5VodEKAU/KAvnJBOv+/GFVatbVDsppk55E/Qu/x7ZniUm1O8Yhnw26vLjg="

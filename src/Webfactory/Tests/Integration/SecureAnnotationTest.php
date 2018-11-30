@@ -39,6 +39,7 @@ class SecureAnnotationTest extends AbstractContainerTestCase
      * @param \ReflectionMethod $method $method
      * @param Secure $annotation
      * @dataProvider secureAnnotationProvider
+     * @doesNotPerformAssertions
      */
     public function testSecureAnnotationsReferenceExistingRoles(
         \ReflectionMethod $method = null,
