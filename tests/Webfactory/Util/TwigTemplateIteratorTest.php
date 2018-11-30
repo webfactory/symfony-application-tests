@@ -2,12 +2,14 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the Twig template iterator.
  */
-class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
+class TwigTemplateIteratorTest extends TestCase
 {
     /**
      * System under test.
@@ -101,7 +103,6 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
         $kernel = $this->createKernel('no-views-app');
         $iterator = new TwigTemplateIterator($kernel);
 
-        $this->setExpectedException(null);
         $this->getItems($iterator);
     }
 
@@ -114,7 +115,7 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function createKernel($name, array $bundles = array())
     {
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
+        $kernel = $this->getMockForAbstractClass(KernelInterface::class);
         $kernel->expects($this->any())
             ->method('getRootDir')
             ->willReturn($this->getTestDataDirectory() . '/' . $name);
@@ -132,7 +133,7 @@ class TwigTemplateIteratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function createBundle($name)
     {
-        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockForAbstractClass(BundleInterface::class);
         $bundle->expects($this->any())
             ->method('getPath')
             ->willReturn($this->getTestDataDirectory() . '/src/' . $name);

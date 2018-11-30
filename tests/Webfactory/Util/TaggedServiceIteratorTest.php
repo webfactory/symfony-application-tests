@@ -2,13 +2,14 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests the iterator for tagged services.
  */
-class TaggedServiceIteratorTest extends \PHPUnit_Framework_TestCase
+class TaggedServiceIteratorTest extends TestCase
 {
     /**
      * System under test.

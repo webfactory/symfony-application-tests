@@ -2,13 +2,14 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests the service creator.
  */
-class ServiceCreatorTest extends \PHPUnit_Framework_TestCase
+class ServiceCreatorTest extends TestCase
 {
     /**
      * System under test.
@@ -84,7 +85,7 @@ class ServiceCreatorTest extends \PHPUnit_Framework_TestCase
         }
         $this->container->setDefinition('my.service', $definition);
 
-        $this->setExpectedException('Webfactory\Util\CannotInstantiateServiceException');
+        $this->expectException('Webfactory\Util\CannotInstantiateServiceException');
         $this->creator->create('my.service');
     }
 }

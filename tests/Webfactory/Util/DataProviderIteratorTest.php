@@ -2,10 +2,12 @@
 
 namespace Webfactory\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the data provider iterator.
  */
-class DataProviderIteratorTest extends \PHPUnit_Framework_TestCase
+class DataProviderIteratorTest extends TestCase
 {
     /**
      * Checks if the iterator is traversable.

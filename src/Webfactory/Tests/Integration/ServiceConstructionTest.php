@@ -17,6 +17,7 @@ class ServiceConstructionTest extends AbstractContainerTestCase
     public function testServicesCanBeInstantiated()
     {
         $container = $this->getContainer();
+        $container->set('webfactory_test.advanced.synthetic_service', new \stdClass());
         $errors    = array();
         $creator   = new ServiceCreator($container);
         $services  = new ApplicationServiceIterator(

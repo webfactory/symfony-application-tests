@@ -17,6 +17,7 @@ class EventSubscriberTest extends AbstractContainerTestCase
      *
      * @param TaggedService $service
      * @dataProvider getEventSubscribers
+     * @doesNotPerformAssertions
      */
     public function testRegisteredEventSubscribers(TaggedService $service = null)
     {
