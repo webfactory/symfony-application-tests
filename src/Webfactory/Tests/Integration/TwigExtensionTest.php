@@ -28,7 +28,7 @@ class TwigExtensionTest extends AbstractContainerTestCase
         $extension = $creator->create($service->getServiceId());
         $message = 'Service "%s" is tagged as Twig extension, but it does not implement the required interface.';
         $message = sprintf($message, $service->getServiceId());
-        $this->assertInstanceOf('\Twig_ExtensionInterface', $extension, $message);
+        $this->assertInstanceOf(\Twig_ExtensionInterface::class, $extension, $message);
     }
 
     /**

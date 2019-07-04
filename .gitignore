@@ -1,8 +1,4 @@
-/vendor/
-/phpunit.xml
-composer.phar
-/.idea/
-tests/_files/test-application/app/cache/*
-tests/_files/test-application/app/logs/*
-build/
-cache.properties
+vendor
+phpunit.xml
+composer.lock
+tests/
