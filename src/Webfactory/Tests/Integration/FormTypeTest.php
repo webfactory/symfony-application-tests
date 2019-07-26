@@ -23,7 +23,7 @@ class FormTypeTest extends AbstractContainerTestCase
     public function testFormTypeAliasAndNameAreEqual(TaggedService $service = null)
     {
         if ($service === null) {
-            // No form types registered, nothing to test.
+            $this->markTestSkipped('No form types registered, nothing to test');
             return;
         }
 

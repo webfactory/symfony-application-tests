@@ -75,7 +75,8 @@ class SecureAnnotationTest extends AbstractContainerTestCase
     public function testNonServiceControllerDoesNotUseSecureAnnotations($class = null)
     {
         if ($class === null) {
-            // No controllers found that are not registered as service. Nothing to test.
+            $this->markTestSkipped('No controllers found that are not registered as service. Nothing to test');
+
             return;
         }
         $info = new \ReflectionClass($class);
