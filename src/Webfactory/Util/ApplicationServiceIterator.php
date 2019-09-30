@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -176,9 +177,15 @@ class ApplicationServiceIterator extends \FilterIterator
                 $builder->registerExtension($extension);
             }
         }
+
+        $container = $this->kernel->getContainer();
+        if ($container === null) {
+            return $builder;
+        }
+
         // Load the application configuration, which might affect the loaded services.
-        /* @var $locator FileLocatorInterface */
-        $locator = $this->kernel->getContainer()->get('file_locator');
+        $kernelRootDir = $container->getParameter('kernel.root_dir');
+        $locator = new FileLocator($this->kernel, $kernelRootDir .'/Resources', [$kernelRootDir]);
         $loaders = array(
             new XmlFileLoader($builder, $locator),
             new YamlFileLoader($builder, $locator),
