@@ -14,9 +14,15 @@ class Configuration implements ConfigurationInterface
      * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('webfactory_test');
+    {        
+        $treeBuilder = new TreeBuilder('webfactory_test');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('webfactory_test');
+        }
 
         $rootNode
             ->children()
